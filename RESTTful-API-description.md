@@ -152,6 +152,9 @@ In this section you can get a maximum of <strong>1.5 points:</strong>
 Each user may have 0 or more journeys. Users can write and read their journeys. 
 
 
+![alt text](uploads/schema_global_desc.png)
+
+***Diagram which shows easily the relations among concepts.***
 
 
 ## API uses
