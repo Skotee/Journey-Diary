@@ -92,8 +92,11 @@ You can get a maximum of <strong>1.75 points in this section</strong>
 ---
 
 :pencil2: The first goal of our project is to build an API that would be the back-end service of some websites that divide journeys in articles. It will be the back-end service of websites allowing people to share articles about a journey.
+
 A journey is divided into days and each day is an separate article. 
+
 An article will be composed of blocks of text and images, the first part of the API will be managing the upload of these to place them in a database.
+
 Applications using of the API will also be able to get the content of the articles posted on the platform with the choice of watching for specific user’s articles or randomly picking public articles, so the other part of the API will be sending all the informations to the different clients need to display the content. 
 This API is very useful for developers because it allows them to structure the data in several distincts parts.
 
@@ -145,6 +148,7 @@ In this section you can get a maximum of <strong>1.5 points:</strong>
 
 
 :pencil2: The API permits users to send articles of their journeys and attach images to these. The journey contains a list of days/articles and those days consist of a description and images. A day is the simplest unit diagram. The journey may contain at least 1 or more days.
+
 Each user may have 0 or more journeys. Users can write and read their journeys. 
 
 
@@ -188,6 +192,7 @@ In this section you can get a maximum of <strong>1.75 points</strong>
 
 
 :pencil2: People who have a blog can use this API to show their journeys. With the API blog creators could even use this structure for something else than travel. They could, for example, use the API to describe an event which the duration was of several days or simply use it for their everyday life. Using the API is interesting for blog creators because it will allows them to divide in a clear way a period of several days. 
+
 Journey sellers' website can also use the API to show customers’ experiences. They can ask their customers to describe their journey. It is interesting for the organised trips because everybody who is interested in a journey can see exactly day after day what they can do during this trip. It is also interesting for journey sellers because customers can add pictures and share their experience of journeys organised by those sellers. That can attract user want to buy this trip.
 
 
@@ -233,8 +238,11 @@ You can get a maximum of <strong>2.5 points</strong> in this secton:
 
 
 :pencil2: Instagram's API resembles the functionality provided by ours, it allows people to post texts and photos related to one user and other users (registered or not) can get the content from the database. Instagram's API is RESTful as well, uses GET, POST, PUT and DELETE and sources that says it uses Django Python.
+
 We selected this API to inspire ourselves as it's from one of the biggest web platform so all the conventions and good practices should be respected.
+
 The best example of the use of Instagram’s API is Instagram’s website itself. Because of Instagram’s API policy, Instagram restricted some endpoints and the functionalities of their API out of their own applications are now really restricted if the user doesn’t have a Business account.
+
 In comparison, we can watch for Twitter API that is also one of the biggest web API that was made for sharing content. This one is easier to integrate to clients, with websites like www.aggreto.com that is able to aggregate the content from multiple APIs (like Twitter, Tumblr or Facebook).
 
 
