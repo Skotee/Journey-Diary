@@ -118,6 +118,13 @@ You can get a maximum of <strong>2.75</strong> points after completing this sect
 :pencil2: *Do not forget to include a diagram presenting the relations*
 
 
+| Name                  | Type           | Restrictions                  | Description                  | Characteristics       | Links                 |
+|-----------------------|----------------|-------------------------------|------------------------------|-----------------------|-----------------------|
+| Name of the attribute | Attribute type | Values that the type can take | Description of the attribute | Uniquenes, default... | keys and foreign keys |
+| ID                    | Integer        | size : 4                      | user’s id number             | Unique                | Primary key           |
+| USERNAME              | String         | max size : 15                 | user’s username              | Unique                |                       |
+| PASSWORD              | String         | max size : 15                 | user’s password              | Not unique            |                       |
+| EMAIL                 | String         | max size : 50                 | user’s email address         | Unique                |                       |
 
 ## Database implementation
 ---
