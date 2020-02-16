@@ -122,7 +122,7 @@ User's model
 | Name                  | Type           | Restrictions                  | Description                  | Characteristics       | Links                 |
 |-----------------------|----------------|-------------------------------|------------------------------|-----------------------|-----------------------|
 | Name of the attribute | Attribute type | Values that the type can take | Description of the attribute | Uniquenes, default... | keys and foreign keys |
-| ID                    | Integer        | size : 4                      | user’s id number             | Unique                | Primary key           |
+| ID                    | Integer        | 		                 | user’s id number             | Unique                | Primary key           |
 | USERNAME              | String         | max size : 15                 | user’s username              | Unique                |                       |
 | PASSWORD              | String         | max size : 15                 | user’s password              | Not unique            |                       |
 | EMAIL                 | String         | max size : 50                 | user’s email address         | Unique                |                       |
@@ -132,8 +132,8 @@ Journey's model
 | Name                  | Type           | Restrictions                  | Description                  | Characteristics       | Links                 |
 |-----------------------|----------------|-------------------------------|------------------------------|-----------------------|-----------------------|
 | Name of the attribute | Attribute type | Values that the type can take | Description of the attribute | Uniquenes, default... | keys and foreign keys |
-| ID                    | Integer        | size : 4                      | journey’s id number          | Unique, default value | Primary key           |
-| USER_ID               | Integer        | size : 4                      | user’s id number             | Unique                | Foreign key           |
+| ID                    | Integer        |                     | journey’s id number          | Unique, default value | Primary key           |
+| USER_ID               | Integer        |                      | user’s id number             | Unique                | Foreign key           |
 | TITLE                 | String         | max size : 15                 | user’s password              | Not unique            |                       |
 
 Day's model
@@ -141,8 +141,8 @@ Day's model
 | Name                  | Type           | Restrictions                  | Description                                           | Characteristics              | Links                 |
 |-----------------------|----------------|-------------------------------|-------------------------------------------------------|------------------------------|-----------------------|
 | Name of the attribute | Attribute type | Values that the type can take | Description of the attribute                          | Uniquenes, default...        | keys and foreign keys |
-| ID                    | Integer        | size : 4                      | Id of the day                                         | Unique, default value        | Primary key           |
-| JOURNEY_ID            | Integer        | size : 4                      | Id of the journey, each day is related to one journey | Unique, default value        | Foreign key           |
+| ID                    | Integer        |                       | Id of the day                                         | Unique, default value        | Primary key           |
+| JOURNEY_ID            | Integer        |                       | Id of the journey, each day is related to one journey | Unique, default value        | Foreign key           |
 | DATE                  | Date           | max size : 15                 | Day’s date                                            | not unique, no default value |                       |
 | DESCRIPTION           | String         | size : 100 00                 | Article for this day                                  | not unique, no default value |                       |
 
@@ -151,8 +151,8 @@ Image's model
 | Name                  | Type           | Restrictions                  | Description                                                                 | Characteristics              | Links                 |
 |-----------------------|----------------|-------------------------------|-----------------------------------------------------------------------------|------------------------------|-----------------------|
 | Name of the attribute | Attribute type | Values that the type can take | Description of the attribute                                                | Uniquenes, default...        | keys and foreign keys |
-| ID                    | Integer        | max size : 4                  | ID of the image                                                             | Unique, default value        | Primary key           |
-| DAY_ID                | Integer        | max size : 4                  | ID of the day that is linked to this image,  one image is linked to one day | Unique, no default value     | Foreign key           |
+| ID                    | Integer        |                   | ID of the image                                                             | Unique, default value        | Primary key           |
+| DAY_ID                | Integer        |                  | ID of the day that is linked to this image,  one image is linked to one day | Unique, no default value     | Foreign key           |
 | EXTENSION             | Varchar(5)     | max size : 3                  | Extension of the image                                                      | not unique, no default       |                       |
 
 ## Database implementation
