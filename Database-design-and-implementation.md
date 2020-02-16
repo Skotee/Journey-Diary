@@ -117,6 +117,7 @@ You can get a maximum of <strong>2.75</strong> points after completing this sect
 
 :pencil2: *Do not forget to include a diagram presenting the relations*
 
+User's model
 
 | Name                  | Type           | Restrictions                  | Description                  | Characteristics       | Links                 |
 |-----------------------|----------------|-------------------------------|------------------------------|-----------------------|-----------------------|
@@ -125,6 +126,16 @@ You can get a maximum of <strong>2.75</strong> points after completing this sect
 | USERNAME              | String         | max size : 15                 | user’s username              | Unique                |                       |
 | PASSWORD              | String         | max size : 15                 | user’s password              | Not unique            |                       |
 | EMAIL                 | String         | max size : 50                 | user’s email address         | Unique                |                       |
+
+Journey's model
+
+| Name                  | Type           | Restrictions                  | Description                  | Characteristics       | Links                 |
+|-----------------------|----------------|-------------------------------|------------------------------|-----------------------|-----------------------|
+| Name of the attribute | Attribute type | Values that the type can take | Description of the attribute | Uniquenes, default... | keys and foreign keys |
+| ID                    | Integer        | size : 4                      | journey’s id number          | Unique, default value | Primary key           |
+| USER_ID               | Integer        | size : 4                      | user’s id number             | Unique                | Foreign key           |
+| TITLE                 | String         | max size : 15                 | user’s password              | Not unique            |                       |
+
 
 ## Database implementation
 ---
