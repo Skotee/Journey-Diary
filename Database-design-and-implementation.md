@@ -136,6 +136,16 @@ Journey's model
 | USER_ID               | Integer        | size : 4                      | user’s id number             | Unique                | Foreign key           |
 | TITLE                 | String         | max size : 15                 | user’s password              | Not unique            |                       |
 
+Day's model
+
+| Name                  | Type           | Restrictions                  | Description                                           | Characteristics              | Links                 |
+|-----------------------|----------------|-------------------------------|-------------------------------------------------------|------------------------------|-----------------------|
+| Name of the attribute | Attribute type | Values that the type can take | Description of the attribute                          | Uniquenes, default...        | keys and foreign keys |
+| ID                    | Integer        | size : 4                      | Id of the day                                         | Unique, default value        | Primary key           |
+| JOURNEY_ID            | Integer        | size : 4                      | Id of the journey, each day is related to one journey | Unique, default value        | Foreign key           |
+| DATE                  | Date           | max size : 15                 | Day’s date                                            | not unique, no default value |                       |
+| DESCRIPTION           | String         | size : 100 00                 | Article for this day                                  | not unique, no default value |                       |
+
 
 ## Database implementation
 ---
