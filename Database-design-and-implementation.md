@@ -292,5 +292,5 @@ In this section you can get a maximum of <strong>3.0</strong> points.
 |:--------: |:---------:|:---------:|
 |Desining the data base and testing| Maëlla Gheraia| 12 hours| 
 |Design the database, create models, setup database and populate it| Radosław Wojaczek | 12 hours | 
-|||| 
+|Design the database, create models and testing| Rémi Viotty | 10 hours | 
 
