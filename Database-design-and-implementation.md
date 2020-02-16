@@ -143,7 +143,7 @@ Day's model
 | Name of the attribute | Attribute type | Values that the type can take | Description of the attribute                          | Uniquenes, default...        | keys and foreign keys |
 | ID                    | Integer        |                       | Id of the day                                         | Unique, default value        | Primary key           |
 | JOURNEY_ID            | Integer        |                       | Id of the journey, each day is related to one journey | Unique, default value        | Foreign key           |
-| DATE                  | Date           | max size : 15                 | Day’s date                                            | not unique, no default value |                       |
+| DATE                  | Date           |                | Day’s date                                            | not unique, no default value |                       |
 | DESCRIPTION           | String         | size : 100 00                 | Article for this day                                  | not unique, no default value |                       |
 
 Image's model
@@ -286,7 +286,7 @@ In this section you can get a maximum of <strong>3.0</strong> points.
 ---
 ## Resources allocation 
 |**Task** | **Student**|**Estimated time**|
-|:------: |:----------:|:----------------:|
+|Desining the data base and tests |Maëlla Gheraia|12 hours|
 |||| 
 |||| 
 |||| 
