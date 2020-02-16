@@ -9,9 +9,9 @@ __Remember to include all required documentation and HOWTOs, including how to cr
 
 
 <h2> All dependencies (external libraries) and how to install them </h2>
-Flask - pip install Flask
-Pytest - pip install pytest
-Pytest-cov - pip install pytest-cov
+Flask - pip install Flask </br>
+Pytest - pip install pytest </br>
+Pytest-cov - pip install pytest-cov </br>
   
 <h2> Define database and version utilized </h2>
 MySQL is an Oracle-backed open source relational database management system based on SQL.  For this project we have used the 8.0.19.0 version which is the most recent version. 
@@ -24,6 +24,6 @@ Import .sql file with sql script which contains data for each column for each ta
 
 <h2> Instruction on how to run the tests of your database </h2>
 
-type in command line this command: pytest in the folder where db_test.py is. db_test and app should be in the same folder. Test will run immediately.
+Type in command line this command: pytest in the folder where db_test.py is. db_test and app should be in the same folder. Test will run immediately.
 
 
