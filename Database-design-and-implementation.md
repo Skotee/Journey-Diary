@@ -146,6 +146,14 @@ Day's model
 | DATE                  | Date           | max size : 15                 | Day’s date                                            | not unique, no default value |                       |
 | DESCRIPTION           | String         | size : 100 00                 | Article for this day                                  | not unique, no default value |                       |
 
+Image's model
+
+| Name                  | Type           | Restrictions                  | Description                                                                 | Characteristics              | Links                 |
+|-----------------------|----------------|-------------------------------|-----------------------------------------------------------------------------|------------------------------|-----------------------|
+| Name of the attribute | Attribute type | Values that the type can take | Description of the attribute                                                | Uniquenes, default...        | keys and foreign keys |
+| ID                    | Integer        | max size : 4                  | ID of the image                                                             | Unique, default value        | Primary key           |
+| DAY_ID                | Integer        | max size : 4                  | ID of the day that is linked to this image,  one image is linked to one day | Unique, no default value     | Foreign key           |
+| EXTENSION             | Varchar(5)     | max size : 3                  | Extension of the image                                                      | not unique, no default       |                       |
 
 ## Database implementation
 ---
