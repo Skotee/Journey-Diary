@@ -117,6 +117,9 @@ You can get a maximum of <strong>2.75</strong> points after completing this sect
 
 :pencil2: *Do not forget to include a diagram presenting the relations*
 
+Schema of the tables structure
+![Schema of the tables structure](https://github.com/Skotee/Journey-Diary/blob/master/2ndDeadline/schema.PNG)
+
 User's model
 
 | Name                  | Type           | Restrictions                  | Description                  | Characteristics       | Links                 |
