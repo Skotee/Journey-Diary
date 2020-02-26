@@ -232,8 +232,24 @@ def test_user_columns(db_handle):
     db_handle.session.add(user_2)    
     with pytest.raises(IntegrityError):
         db_handle.session.commit()
-
     db_handle.session.rollback()
+
+def test_error_journey(db_handle):
+    db_handle.session.add(_get_journey())
+    with pytest.raises(IntegrityError):
+        db_handle.session.commit()
+
+def test_error_day(db_handle):
+    db_handle.session.add(_get_day())
+    with pytest.raises(IntegrityError):
+        db_handle.session.commit()
+
+def test_error_image(db_handle):
+    db_handle.session.add(_get_image())
+    with pytest.raises(IntegrityError):
+        db_handle.session.commit()
+        
+        
     
    
    
