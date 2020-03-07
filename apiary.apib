@@ -326,8 +326,7 @@ object containing the title and the description.
 
         {
             "title": "Test",
-            "description": "Test",
-
+            "description": "Test"
         }
 
 + Response 201 (application/json)
@@ -452,6 +451,7 @@ You can delete one Journey in the API.
     Returned if trying to delete one journey that does not exist.
     + Body
 
+
 ## Days by Journey [/users/{user}/journeys/{journey}/days]
 + Parameters
     + user - Id of the user
@@ -493,7 +493,7 @@ You can list all the Days of the database linked to one Journey.
     },
       "items":[
          {
-            "title":"1st Day",
+            "date":"2012-04-23T18:25:43.511Z",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/1"
@@ -501,7 +501,7 @@ You can list all the Days of the database linked to one Journey.
             }
          },
          {
-            "title":"2nd Day",
+            "date":"2012-04-25T18:25:43.511Z",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/2"
@@ -509,7 +509,7 @@ You can list all the Days of the database linked to one Journey.
             }
          },
          {
-            "title":"3rd Day",
+            "date":"2012-04-26T18:25:43.511Z",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/3"
@@ -527,8 +527,7 @@ object containing the date and the description.
 
         {
             "date": "2012-04-23T18:25:43.511Z",
-            "description": "Test",
-
+            "description": "Test"
         }
 
 + Response 201 (application/json)
@@ -552,6 +551,7 @@ object containing the date and the description.
 
 + Response 400 (application/json)
 - Journey ID already taken
+
 
 ## Day Item [/api/users/{user}/journeys/{journey}/days/{day}/]
 + Parameters
@@ -655,7 +655,7 @@ You can delete one Day in the API.
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/20/journeys/30/days/1/"
+                        "href": "/api/users/20/journeys/30/days/1/",
                         "method": "DELETE"
                     },
                     "modify-day": {
@@ -686,6 +686,235 @@ You can delete one Day in the API.
                         "method": "GET",
                         "encoding": "json",
                         "title": "Get informations about one day to the Journey Diary API",
+                    }
+                }
+            }
+
+
++ Response 404 (application/json)
+    Returned if trying to delete one Day that does not exist.
+    + Body
+
+
+## Images by Day [/users/{user}/journeys/{journey}/days/{day}/images]
++ Parameters
+    + user - Id of the user
+    + journey - Id of the journey
+    + day - Id of the day
+
+### List of Images by Day [GET]
+You can list all the Images of the database linked to one Day.
+
++ Response 200 (application/json)
+    
+    {
+        "@controls":{
+            "self":{
+                "href":"/api/users/1/journeys/1/days/1/images"
+            },
+            "add-day":{
+                "href":"/api/users/1/journeys/1/days/1/images",
+                "method":"POST",
+                "encoding":"json",
+                "title":"Add Image to the Journey Diary API",
+                "schema":{
+                    "type":"object",
+                    "required":[
+                       "extension"
+                    ],
+                    "properties":{
+                       "extension":{
+                          "description":"Extension of the file of the image",
+                          "type":"string"
+                       }
+                    }
+                }
+            }
+        },
+        "items":[
+            {
+                "@controls":{
+                    "self":{
+                        "href":"/api/users/1/journeys/1/days/1/images/1.png"
+                    }
+                }
+            },
+            {
+                "@controls":{
+                    "self":{
+                        "href":"/api/users/1/journeys/1/days/1/images/2.jpg"
+                    }
+                }
+            },
+            {
+                "@controls":{
+                    "self":{
+                        "href":"/api/users/1/journeys/1/days/1/images/3.png"
+                    }
+                }
+            }
+        ]
+   }
+
+### Create a New Image [POST]
+You can create a new Image in the API. It takes a JSON
+object containing the extension of the image.
+
++ Request (application/json)
+
+        {
+            "extension": "png"
+        }
+
++ Response 201 (application/json)
+
+        {
+             "@controls":{
+                    "self":{
+                        "href":"/api/users/1/journeys/1/days/1/images"
+                    },
+                    "get-days":{
+                        "href":"/api/users/1/journeys/1/days/1/images",
+                        "method":"GET",
+                        "encoding":"json",
+                        "title":"Get list of images of the Journey Diary API"
+                    }
+                }
+            }
+        }
+            
+        
+
++ Response 400 (application/json)
+- Journey ID already taken
+
+
+## Image Item [/api/users/{user}/journeys/{journey}/days/{day}/images/{image}.{extension}]
++ Parameters
+    + user - Id of the user
+    + journey - Id of the journey
+    + day - Id of the day
+    + image - Id of the image
+    + extension - Extension of the image
+
+### Get informations about one Image [GET]
+You can get the Image in the API.
+
++ Response 200 (application/json)
+            {
+                "@controls": {
+                    "self": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
+                        "method": "GET"
+                    },
+                    "modify-image": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
+                        "method": "PUT",
+                        "encoding": "json",
+                        "title": "Modify one image to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "extension"
+                            ],
+                            "properties": {
+                                "extension": {
+                                    "description": "Extension of the image",
+                                    "type": "string"
+                                
+                                }
+                            }
+                        }
+                    },
+                    "delete-image": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
+                        "method": "DELETE",
+                        "encoding": "json",
+                        "title": "Delete one image of the Journey Diary API"
+                    }
+            }
+        }
+
++ Response 404 (application/json)
+    Returned if trying to access one User that does not exist.
+    + Body
+
+### Modify informations about one Image [PUT]
+You can modify the informations about one Image in the API. It takes a JSON
+object containing the extension.
++ Request (application/json)
+
+        {
+            "extension": "jpg"
+        }
+
++ Response 200 (application/json)
+
+    
+            {
+                "@controls": {
+                    "self": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
+                        "method": "PUT"
+                    },
+                    "get-image": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
+                        "method": "GET",
+                        "encoding": "json",
+                        "title": "Get one image of the Journey Diary API",
+                    },
+                    "delete-image": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
+                        "method": "DELETE",
+                        "encoding": "json",
+                        "title": "Delete one image of the Journey Diary API"
+                    }
+                }
+            }
+
+
++ Response 404 (application/json)
+    Returned if trying to modify one User that does not exist.
+    + Body
+
+### Delete one Image [DELETE]
+You can delete one Image in the API.
+    
+
++ Response 200 (application/json)
+
+    
+            {
+                "@controls": {
+                    "self": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg", 
+                        "method": "DELETE"
+                    },
+                    "modify-image": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
+                        "method": "PUT",
+                        "encoding": "json",
+                        "title": "Modify one image to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "date",
+                                "description"
+                            ],
+                            "properties": {
+                                "extension": {
+                                    "description": "Extension of the image",
+                                    "type": "string"
+
+                                }
+                            }
+                        }
+                    },
+                    "get-image": {
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
+                        "method": "GET",
+                        "encoding": "json",
+                        "title": "Get one image to the Journey Diary API",
                     }
                 }
             }
