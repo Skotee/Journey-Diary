@@ -1,14 +1,14 @@
 # Meetings notes
 
 ## Meeting 1.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 20/02 **
+* **ASSISTANTS: Mika Oja**
 
 ### Minutes
 *Summary of what was discussed during the meeting*
 
 ### Action points
-*List here the actions points discussed with assistants*
+*More concret for "API uses" : concret client examples -> Actual piece of software, mediatype of instagram api -> if too closed twitter*
 
 
 ### Comments from staff
