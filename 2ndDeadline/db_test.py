@@ -218,6 +218,20 @@ def test_update_journey(db_handle):
     journey.query.filter_by(id=5555).update(dict(title='My new title'))
     t = journey.query.filter_by(id=5555).first()
     assert t.title == 'My new title'
+
+def test_update_day(db_handle): 
+    u = _get_user()
+    db_handle.session.add(u)
+    db_handle.session.commit()
+    j = _get_journey()
+    db_handle.session.add(j)
+    db_handle.session.commit()
+    d = _get_day()
+    db_handle.session.add(d)
+    db_handle.session.commit()
+    day.query.filter_by(id=6666).update(dict(description='My new description'))
+    t = day.query.filter_by(id=6666).first()
+    assert t.description == 'My new description'
  
  
 def test_user_columns(db_handle):
@@ -249,8 +263,3 @@ def test_error_image(db_handle):
     with pytest.raises(IntegrityError):
         db_handle.session.commit()
         
-        
-    
-   
-   
- 
