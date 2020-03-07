@@ -3,13 +3,14 @@ HOST: https://journey-diary.org/
 
 # Journey Diary
 
-Journey Diary dsgfdgdfhfdh is a back-end that would be the back-end service of 
+Journey Diary is a back-end that would be the back-end service of 
 some websites that divide journeys in articles.
+
 
 ## Users Collection [/users]
 
 ### List All Users [GET]
-
+You can list all the Users of the database.
 + Response 200 (application/json)
 
         {
@@ -77,7 +78,6 @@ some websites that divide journeys in articles.
 
 
 ### Create a New User [POST]
-
 You can create a new User in the API. It takes a JSON
 object containing the username, the email and the password.
 
@@ -100,7 +100,7 @@ object containing the username, the email and the password.
                         "href":"/api/users/",
                         "method":"GET",
                         "encoding":"json",
-                        "title":"Get list of users of the Journey Diary API",
+                        "title":"Get list of users of the Journey Diary API"
                     }
                 }
             }
@@ -109,19 +109,19 @@ object containing the username, the email and the password.
     Returned if a Username already taken
     + Body
 
-## User Infos [/users/{id}]
+## User Item [/users/{user}]
++ Parameters
+    + user - Id of the user
 
 ### Get informations about one User [GET]
-+ Parameters
-    + id - Id of the user
-    
+You can get the informations about one User in the API. It takes a JSON
+object containing the username, the email and the password.
 + Response 200 (application/json)
-
-    
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/20"
+                        "href": "/api/users/20",
+                        "method": "GET"
                     },
                     "modify-user": {
                         "href": "/api/users/20",
@@ -146,6 +146,12 @@ object containing the username, the email and the password.
                                 }
                             }
                         }
+                    },
+                    "delete-user": {
+                        "href": "/api/users/20",
+                        "method": "DELETE",
+                        "encoding": "json",
+                        "title": "Delete one user of the Journey Diary API"
                     }
             },
             "username": "maellamaella",
@@ -157,9 +163,8 @@ object containing the username, the email and the password.
     + Body
 
 ### Modify informations about one User [PUT]
-+ Parameters
-    + id - Id of the user
-    
+You can modify the informations about one User in the API. It takes a JSON
+object containing the username, the email and the password.
 + Request (application/json)
 
         {
@@ -174,9 +179,68 @@ object containing the username, the email and the password.
             {
                 "@controls": {
                     "self": {
+                        "href": "/api/users/20",
+                        "method": "PUT"
+                    },
+                    "get-user": {
+                        "href": "/api/users/20",
+                        "method": "GET",
+                        "encoding": "json",
+                        "title": "Get informations about one user to the Journey Diary API",
+                    },
+                    "delete-user": {
+                        "href": "/api/users/20",
+                        "method": "DELETE",
+                        "encoding": "json",
+                        "title": "Delete one user of the Journey Diary API"
+                    }
+                }
+            }
+
+
++ Response 404 (application/json)
+    Returned if trying to modify one User that does not exist.
+    + Body
+    
+    
+### Delete one User [DELETE]
+You can delete one User in the API.
+    
+
++ Response 200 (application/json)
+
+    
+            {
+                "@controls": {
+                    "self": {
                         "href": "/api/users/20"
+                        "method": "DELETE"
                     },
                     "modify-user": {
+                        "href": "/api/users/20",
+                        "method": "PUT",
+                        "encoding": "json",
+                        "title": "Modify one user to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "username",
+                                "password",
+                                "email"
+                            ],
+                            "properties": {
+                                "username": {
+                                    "description": "Username of the account",
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "description": "Email of the account",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "get-user": {
                         "href": "/api/users/20",
                         "method": "GET",
                         "encoding": "json",
@@ -187,22 +251,15 @@ object containing the username, the email and the password.
 
 
 + Response 404 (application/json)
-    Returned if trying to modify one User that does not exist.
+    Returned if trying to delete one User that does not exist.
     + Body
 
 
-
-FORMAT: 1A
-HOST: https://journey-diary.org/
-
-# Journey Diary
-
-Journey Diary is a back-end that would be the back-end service of 
-some websites that divide journeys in articles.
-
 ## Journeys by user [/users/{user}/journeys/]
-
++ Parameters
+    + user - Id of the user
 ### List of Journeys by User [GET]
+You can list all the Users of the database linked to one User.
 
 + Response 200 (application/json)
     
@@ -230,11 +287,11 @@ some websites that divide journeys in articles.
                "description":{
                   "description":"Description of the journey",
                   "type":"string"
-               },
+               }
             }
          }
       }
-},
+    },
       "items":[
          {
             "title":"1st Journey",
@@ -264,9 +321,8 @@ some websites that divide journeys in articles.
    }
 
 ### Create a New Jouney [POST]
-
-You can create a new User in the API. It takes a JSON
-object containing the username, the email and the password.
+You can create a new Journey in the API. It takes a JSON
+object containing the title and the description.
 
 + Request (application/json)
 
@@ -287,47 +343,11 @@ object containing the username, the email and the password.
                         "href":"/api/users/{user}/journeys/",
                         "method":"GET",
                         "encoding":"json",
-                        "title":"Get list of journeys of the Journey Diary API",
+                        "title":"Get list of journeys of the Journey Diary API"
                     }
-                },
+                }
             }
         
 
 + Response 400 (application/json)
 - Journey ID already taken
-
-
-## Journeys collection [/journeys/]
-
-### List of Journeys [GET]
-
-+ Response 200 (application/json)
-    
-   {
-      "items":[
-         {
-            "title":"1st Journey",
-            "@controls":{
-               "self":{
-                  "href":"/api/journeys/"
-               }
-            }
-         },
-         {
-            "title":"2nd Journey",
-            "@controls":{
-               "self":{
-                  "href":"/api/journeys/"
-               }
-            }
-         },
-         {
-            "title":"3rd journey",
-            "@controls":{
-               "self":{
-                  "href":"/api/journeys/"
-               }
-            }
-         }
-      ]
-   }
