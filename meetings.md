@@ -16,14 +16,17 @@
 
 ## Meeting 2.
 * **DATE:**
-* **ASSISTANTS:**
+* **ASSISTANTS:** Marta Cortes Orduna
 
 ### Minutes
 *Summary of what was discussed during the meeting*
-
+-Correct userid, journeyid and daid to make them not unique value
+-test delete columns
+-cascade
 ### Action points
 *List here the actions points discussed with assistants*
 
+-Concerns about 3rd deadline things
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
