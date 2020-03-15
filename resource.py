@@ -83,7 +83,19 @@ class DayCollection(Resource):
         pass
 
     def post(self, user, journey):
-        pass
+        if not request.json :
+            return "", 415
+        try:
+            da = day(date=request.json["date"],
+                        description = request.json["description"],
+                        journey_id = journey)
+            db.session.add(da)
+            db.session.commit()
+        except KeyError:
+            return "", 400
+        except exc.IntegrityError:
+            return "", 409
+        return "", 201
 
 class DayItem(Resource):
 
@@ -108,7 +120,18 @@ class ImageCollection(Resource):
         pass
 
     def post(self, user, journey, day):
-        pass
+        if not request.json :
+            return "", 415
+        try:
+            im = image(extension = request.json["extension"],
+                        day_id = day)
+            db.session.add(im)
+            db.session.commit()
+        except KeyError:
+            return "", 400
+        except exc.IntegrityError:
+            return "", 409
+        return "", 201
 
 class ImageItem(Resource):
 
