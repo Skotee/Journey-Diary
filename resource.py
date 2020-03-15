@@ -1,5 +1,11 @@
+from flask import request
 from flask_restful import Resource
 from models import user, journey, day, image, db, app
+from sqlalchemy import exc
+
+'''
+Users
+'''
 
 class UserCollection(Resource):
 
@@ -8,29 +14,109 @@ class UserCollection(Resource):
 
     def post(self):
         if not request.json:
-            abort(415)
-            
+            return "", 415
         try:
-            us = user(username=request.json["handle"],
-                        password=request.json["weight"],
-                        email=request.json["price"])
+            us = user(username=request.json["username"],
+                        password=request.json["password"],
+                        email=request.json["email"])
             db.session.add(us)
             db.session.commit()
         except KeyError:
-            abort(400)
-        except IntegrityError:
-            abort(409)
-        
+            return "", 400
+        except exc.IntegrityError:
+            return "", 409
         return "", 201
-
 
 class UserItem(Resource):
 
-    def get(self, product):
+    def get(self, user):
         pass
 
-    def put(self, product):
+    def put(self, user):
         pass
 
-    def delete(self, product):
+    def delete(self, user):
+        pass
+
+'''
+Journeys
+'''
+
+class JourneyCollection(Resource):
+
+    def get(self,user):
+        pass
+
+    def post(self,user):
+        if not request.json :
+            return "", 415
+        try:
+            jo = journey(title=request.json["title"],
+                        user_id = user)
+            db.session.add(jo)
+            db.session.commit()
+        except KeyError:
+            return "", 400
+        except exc.IntegrityError:
+            return "", 409
+        return "", 201
+
+class JourneyItem(Resource):
+
+    def get(self, user, journey):
+        pass
+
+    def put(self, user, journey):
+        pass
+
+    def delete(self, user, journey):
+        pass
+
+
+'''
+Days
+'''
+
+class DayCollection(Resource):
+
+    def get(self, user, journey):
+        pass
+
+    def post(self, user, journey):
+        pass
+
+class DayItem(Resource):
+
+    def get(self, user, journey, day):
+        pass
+
+    def put(self, user, journey, day):
+        pass
+
+    def delete(self, user, journey, day):
+        pass
+
+
+
+'''
+Images
+'''
+
+class ImageCollection(Resource):
+
+    def get(self, user, journey, day):
+        pass
+
+    def post(self, user, journey, day):
+        pass
+
+class ImageItem(Resource):
+
+    def get(self, user, journey, day, image):
+        pass
+
+    def put(self, user, journey, day, image):
+        pass
+
+    def delete(self, user, journey, day, image):
         pass
