@@ -15,6 +15,65 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+  `ID` int NOT NULL,
+  `USERNAME` varchar(15) NOT NULL,
+  `PASSWORD` varchar(15) NOT NULL,
+  `EMAIL` varchar(50) NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `idUser_UNIQUE` (`ID`),
+  UNIQUE KEY `USERNAME_UNIQUE` (`USERNAME`),
+  UNIQUE KEY `EMAIL_UNIQUE` (`EMAIL`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'Roman','user','r@op.pl'),(2,'Remi','user','remi@wp.pl');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
+-- Table structure for table `journey`
+--
+
+DROP TABLE IF EXISTS `journey`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `journey` (
+  `ID` int NOT NULL,
+  `USER_ID` int NOT NULL,
+  `TITLE` varchar(50) NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`),
+  UNIQUE KEY `USER_ID_UNIQUE` (`USER_ID`),
+  CONSTRAINT `FK_JOURNEY` FOREIGN KEY (`USER_ID`) REFERENCES `user` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `journey`
+--
+
+LOCK TABLES `journey` WRITE;
+/*!40000 ALTER TABLE `journey` DISABLE KEYS */;
+INSERT INTO `journey` VALUES (1,1,'Egypt');
+/*!40000 ALTER TABLE `journey` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `day`
 --
@@ -73,62 +132,6 @@ INSERT INTO `image` VALUES (1,1,'jpg');
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `journey`
---
-
-DROP TABLE IF EXISTS `journey`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `journey` (
-  `ID` int NOT NULL,
-  `USER_ID` int NOT NULL,
-  `TITLE` varchar(50) NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `ID_UNIQUE` (`ID`),
-  UNIQUE KEY `USER_ID_UNIQUE` (`USER_ID`),
-  CONSTRAINT `FK_JOURNEY` FOREIGN KEY (`USER_ID`) REFERENCES `user` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `journey`
---
-
-LOCK TABLES `journey` WRITE;
-/*!40000 ALTER TABLE `journey` DISABLE KEYS */;
-INSERT INTO `journey` VALUES (1,1,'Egypt');
-/*!40000 ALTER TABLE `journey` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `ID` int NOT NULL,
-  `USERNAME` varchar(15) NOT NULL,
-  `PASSWORD` varchar(15) NOT NULL,
-  `EMAIL` varchar(50) NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `idUser_UNIQUE` (`ID`),
-  UNIQUE KEY `USERNAME_UNIQUE` (`USERNAME`),
-  UNIQUE KEY `EMAIL_UNIQUE` (`EMAIL`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Roman','user','r@op.pl'),(2,'Remi','user','remi@wp.pl');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
