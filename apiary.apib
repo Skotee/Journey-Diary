@@ -281,10 +281,6 @@ You can list all the Users of the database linked to one User.
                    "title":{
                       "description":"Title of the journey",
                       "type":"string"
-                   },
-                   "description":{
-                      "description":"Description of the journey",
-                      "type":"string"
                    }
                 }
          }
@@ -325,8 +321,7 @@ object containing the title and the description.
 + Request (application/json)
 
         {
-            "title": "Test",
-            "description": "Test"
+            "title": "Test"
         }
 
 + Response 201 (application/json)
@@ -493,7 +488,7 @@ You can list all the Days of the database linked to one Journey.
     },
       "items":[
          {
-            "date":"2012-04-23T18:25:43.511Z",
+            "date": "2020-03-15 18:30:00",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/1"
@@ -501,7 +496,7 @@ You can list all the Days of the database linked to one Journey.
             }
          },
          {
-            "date":"2012-04-25T18:25:43.511Z",
+            "date": "2020-03-15 18:30:00",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/2"
@@ -509,7 +504,7 @@ You can list all the Days of the database linked to one Journey.
             }
          },
          {
-            "date":"2012-04-26T18:25:43.511Z",
+            "date": "2020-03-15 18:30:00",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/3"
@@ -526,7 +521,7 @@ object containing the date and the description.
 + Request (application/json)
 
         {
-            "date": "2012-04-23T18:25:43.511Z",
+            "date": "2020-03-15 18:30:00",
             "description": "Test"
         }
 
@@ -599,7 +594,7 @@ object containing the date and the description.
                         "title": "Delete one day of the Journey Diary API"
                     }
             },
-            "date": 2012-04-23T18:25:43.511Z,
+            "date": "2020-03-15 18:30:00",
             "description": "Description"
         }
 
@@ -613,7 +608,7 @@ object containing the date and a description.
 + Request (application/json)
 
         {
-            "date": 2013-04-23T18:25:43.511Z,
+            "date": "2020-03-15 18:30:00",
             "description": "Description new"
         }
 
