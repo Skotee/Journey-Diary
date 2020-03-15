@@ -7,8 +7,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy import event
 from sqlalchemy.exc import IntegrityError, StatementError
 
-import app
-from app import user, journey, day, image
+from models import user, journey, day, image, db, app
 
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
@@ -21,15 +20,15 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 @pytest.fixture
 def db_handle():
     db_fd, db_fname = tempfile.mkstemp()
-    app.app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_fname
-    app.app.config["TESTING"] = True
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_fname
+    app.config["TESTING"] = True
     
-    with app.app.app_context():
-        app.db.create_all()
+    with app.app_context():
+        db.create_all()
         
-    yield app.db
+    yield db
     
-    app.db.session.remove()
+    db.session.remove()
     os.close(db_fd)
     os.unlink(db_fname)
 
@@ -38,7 +37,6 @@ Function for creating a user
     """
 def _get_user(): 
     return user(
-        id = 4444,
         username ="Maella",
         password = "mmmm" ,
         email ="maella.gheraia@gmail.com"
@@ -49,8 +47,7 @@ Function for creating a journey
  
 def _get_journey(): 
     return journey(
-        id = 5555,
-        user_id = 4444,
+        user_id = 1,
         title ="Journey test"
     )
     """
@@ -58,8 +55,7 @@ Function for creating a day
     """
 def _get_day(): 
     return day(
-        id = 6666,
-        journey_id = 5555,
+        journey_id = 1,
         date = datetime.now() ,
         description ="Nice trip"
     )
@@ -68,8 +64,7 @@ Function for creating an image
     """
 def _get_image(): 
     return image(
-        id = 7777,
-        day_id = 6666,
+        day_id = 1,
         extension = "jpg" 
     )
     """
@@ -201,8 +196,8 @@ def test_update_user(db_handle):
     u = _get_user()
     db_handle.session.add(u)
     db_handle.session.commit()
-    user.query.filter_by(id=4444).update(dict(email='my_new_email@example.com'))
-    t = user.query.filter_by(id=4444).first()
+    user.query.filter_by(id=1).update(dict(email='my_new_email@example.com'))
+    t = user.query.filter_by(id=1).first()
     assert t.email == 'my_new_email@example.com'
     """
 Function for updating the title of a journey
@@ -215,8 +210,8 @@ def test_update_journey(db_handle):
     j = _get_journey()
     db_handle.session.add(j)
     db_handle.session.commit()
-    journey.query.filter_by(id=5555).update(dict(title='My new title'))
-    t = journey.query.filter_by(id=5555).first()
+    journey.query.filter_by(id=1).update(dict(title='My new title'))
+    t = journey.query.filter_by(id=1).first()
     assert t.title == 'My new title'
 
 def test_update_day(db_handle): 
@@ -229,19 +224,20 @@ def test_update_day(db_handle):
     d = _get_day()
     db_handle.session.add(d)
     db_handle.session.commit()
-    day.query.filter_by(id=6666).update(dict(description='My new description'))
-    t = day.query.filter_by(id=6666).first()
+    day.query.filter_by(id=1).update(dict(description='My new description'))
+    t = day.query.filter_by(id=1).first()
     assert t.description == 'My new description'
  
  
 def test_user_columns(db_handle):
     """
-    Tests sensor columns' restrictions. Name must be unique, and name and model
+    Tests sensor columns' restrictions. ID must be unique, and name and model
     must be mandatory.
     """
 
     user_1 = _get_user()
     user_2 = _get_user()
+    user_2.id = 1
     db_handle.session.add(user_1)
     db_handle.session.add(user_2)    
     with pytest.raises(IntegrityError):
