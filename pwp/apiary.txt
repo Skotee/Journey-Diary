@@ -1,0 +1,333 @@
+FORMAT: 1A
+HOST: https://journey-diary.org/
+
+# Journey Diary
+
+Journey Diary is a back-end that would be the back-end service of 
+some websites that divide journeys in articles.
+
+## Users Collection [/users]
+
+### List All Users [GET]
+
++ Response 200 (application/json)
+
+        {
+           "@controls":{
+              "self":{
+                 "href":"/api/users/"
+              },
+              "add-user":{
+                 "href":"/api/users/",
+                 "method":"POST",
+                 "encoding":"json",
+                 "title":"Add user to the Journey Diary API",
+                 "schema":{
+                    "type":"object",
+                    "required":[
+                       "username",
+                       "password",
+                       "email"
+                    ],
+                    "properties":{
+                       "username":{
+                          "description":"Username of the account",
+                          "type":"string"
+                       },
+                       "password":{
+                          "description":"Password of the account",
+                          "type":"string"
+                       },
+                       "email":{
+                          "description":"Email of the account",
+                          "type":"string"
+                       }
+                    }
+                 }
+              }
+        },
+              "items":[
+                 {
+                    "username":"maellamaella",
+                    "@controls":{
+                       "self":{
+                          "href":"/api/users/20"
+                       }
+                    }
+                 },
+                 {
+                    "username":"remiviotty",
+                    "@controls":{
+                       "self":{
+                          "href":"/api/users/21"
+                       }
+                    }
+                 },
+                 {
+                    "username":"radek",
+                    "@controls":{
+                       "self":{
+                          "href":"/api/users/22"
+                       }
+                    }
+                 }
+              ]
+           }
+
+
+
+### Create a New User [POST]
+
+You can create a new User in the API. It takes a JSON
+object containing the username, the email and the password.
+
++ Request (application/json)
+
+        {
+            "username": "newUser",
+            "email": "newmail@mail.com",
+            "password":"newpassword123"
+        }
+
++ Response 201 (application/json)
+
+            {
+                "@controls":{
+                    "self":{
+                        "href":"/api/users/"
+                    },
+                    "get-users":{
+                        "href":"/api/users/",
+                        "method":"GET",
+                        "encoding":"json",
+                        "title":"Get list of users of the Journey Diary API",
+                    }
+                }
+            }
+            
++ Response 400
+    Returned if a Username already taken
+    + Body
+
+## User Infos [/users/{id}]
+
+### Get informations about one User [GET]
++ Parameters
+    + id - Id of the user
+    
++ Response 200 (application/json)
+
+    
+            {
+                "@controls": {
+                    "self": {
+                        "href": "/api/users/20"
+                    },
+                    "modify-user": {
+                        "href": "/api/users/20",
+                        "method": "PUT",
+                        "encoding": "json",
+                        "title": "Modify one user to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "username",
+                                "password",
+                                "email"
+                            ],
+                            "properties": {
+                                "username": {
+                                    "description": "Username of the account",
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "description": "Email of the account",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+            },
+            "username": "maellamaella",
+            "email": "mail@gmail.com"
+        }
+
++ Response 404 (application/json)
+    Returned if trying to access one User that does not exist.
+    + Body
+
+### Modify informations about one User [PUT]
++ Parameters
+    + id - Id of the user
+    
++ Request (application/json)
+
+        {
+            "username": "newUser",
+            "email": "newmail@mail.com",
+            "password":"newpassword123"
+        }
+
++ Response 200 (application/json)
+
+    
+            {
+                "@controls": {
+                    "self": {
+                        "href": "/api/users/20"
+                    },
+                    "modify-user": {
+                        "href": "/api/users/20",
+                        "method": "GET",
+                        "encoding": "json",
+                        "title": "Get informations about one user to the Journey Diary API",
+                    }
+                }
+            }
+
+
++ Response 404 (application/json)
+    Returned if trying to modify one User that does not exist.
+    + Body
+
+
+
+FORMAT: 1A
+HOST: https://journey-diary.org/
+
+# Journey Diary
+
+Journey Diary is a back-end that would be the back-end service of 
+some websites that divide journeys in articles.
+
+## Journeys by user [/users/{user}/journeys/]
+
+### List of Journeys by User [GET]
+
++ Response 200 (application/json)
+    
+    {
+   "@controls":{
+      "self":{
+         "href":"/api/users/{user}/journeys/"
+      },
+      "add-user":{
+         "href":"/api/users/{user}/journeys/",
+         "method":"POST",
+         "encoding":"json",
+         "title":"Add journey to the Journey Diary API",
+         "schema":{
+            "type":"object",
+            "required":[
+               "title",
+               "description",
+            ],
+            "properties":{
+               "title":{
+                  "description":"Title of the journey",
+                  "type":"string"
+               },
+               "description":{
+                  "description":"Description of the journey",
+                  "type":"string"
+               },
+            }
+         }
+      }
+},
+      "items":[
+         {
+            "title":"1st Journey",
+            "@controls":{
+               "self":{
+                  "href":"/api/users/{1}/journeys/"
+               }
+            }
+         },
+         {
+            "title":"2nd Journey",
+            "@controls":{
+               "self":{
+                  "href":"/api/users/{2}/journeys/"
+               }
+            }
+         },
+         {
+            "title":"3rd journey",
+            "@controls":{
+               "self":{
+                  "href":"/api/users/{3}/journeys/"
+               }
+            }
+         }
+      ]
+   }
+
+### Create a New Jouney [POST]
+
+You can create a new User in the API. It takes a JSON
+object containing the username, the email and the password.
+
++ Request (application/json)
+
+        {
+            "title": "Test",
+            "description": "Test",
+
+        }
+
++ Response 201 (application/json)
+
+ {
+             "@controls":{
+                    "self":{
+                        "href":"/api/users/{user}/journeys/"
+                    },
+                    "get-journeys":{
+                        "href":"/api/users/{user}/journeys/",
+                        "method":"GET",
+                        "encoding":"json",
+                        "title":"Get list of journeys of the Journey Diary API",
+                    }
+                },
+            }
+        
+
++ Response 400 (application/json)
+- Journey ID already taken
+
+
+## Journeys collection [/journeys/]
+
+### List of Journeys [GET]
+
++ Response 200 (application/json)
+    
+   {
+      "items":[
+         {
+            "title":"1st Journey",
+            "@controls":{
+               "self":{
+                  "href":"/api/journeys/"
+               }
+            }
+         },
+         {
+            "title":"2nd Journey",
+            "@controls":{
+               "self":{
+                  "href":"/api/journeys/"
+               }
+            }
+         },
+         {
+            "title":"3rd journey",
+            "@controls":{
+               "self":{
+                  "href":"/api/journeys/"
+               }
+            }
+         }
+      ]
+   }
