@@ -53,7 +53,7 @@ An User represent an User in the database. You can easily get the informations a
 
 ### List All Users [GET]
 You can list all the Users of the database.
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
         {
            "@controls":{
@@ -122,7 +122,7 @@ You can list all the Users of the database.
 You can create a new User in the API. It takes a JSON
 object containing the username, the email and the password.
 
-+ Request (application/json)
++ Request (application/vnd.mason+json)
 
         {
             "username": "newUser",
@@ -130,7 +130,7 @@ object containing the username, the email and the password.
             "password":"newpassword123"
         }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.mason+json)
 
         {
                 "@controls": {
@@ -183,7 +183,7 @@ object containing the username, the email and the password.
 
 ### Get informations about one User [GET]
 You can get the informations about one User in the API.
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
             {
                 "@controls": {
                     "self": {
@@ -224,14 +224,14 @@ You can get the informations about one User in the API.
                 "email": "mail@gmail.com"
             }
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to access one User that does not exist.
     + Body
 
 ### Modify informations about one User [PUT]
 You can modify the informations about one User in the API. It takes a JSON
 object containing the username, the email and the password.
-+ Request (application/json)
++ Request (application/vnd.mason+json)
 
         {
             "username": "newUser",
@@ -239,7 +239,7 @@ object containing the username, the email and the password.
             "password":"newpassword123"
         }
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
             {
                 "@controls": {
@@ -282,7 +282,7 @@ object containing the username, the email and the password.
             }
 
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to modify one User that does not exist.
     + Body
 
@@ -290,7 +290,7 @@ object containing the username, the email and the password.
 You can delete one User in the API.
     
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
     
             {
@@ -333,7 +333,7 @@ You can delete one User in the API.
             }
 
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to delete one User that does not exist.
     + Body
 
@@ -364,7 +364,7 @@ A Journey represent a Journey Item in the database. You can easily get the infor
 ### List of Journeys by User [GET]
 You can list all the Users of the database linked to one User.
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
     
     {
         "@controls":{
@@ -423,13 +423,13 @@ You can list all the Users of the database linked to one User.
 You can create a new Journey in the API. It takes a JSON
 object containing the title and the description.
 
-+ Request (application/json)
++ Request (application/vnd.mason+json)
 
         {
             "title": "Test"
         }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.mason+json)
 
         {
              "@controls":{
@@ -448,7 +448,7 @@ object containing the title and the description.
             
         
 
-+ Response 400 (application/json)
++ Response 400 (application/vnd.mason+json)
 - Journey ID already taken
  
 ## Journey Item [/users/{user}/journeys/{journey}/]
@@ -459,7 +459,7 @@ object containing the title and the description.
 ### Get informations about one Journey [GET]
 You can get the informations about one Journey in the API.
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
     
             {
@@ -490,20 +490,20 @@ You can get the informations about one Journey in the API.
             "title": "Title",
         }
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to access one Journey that does not exist.
     + Body
 
 ### Modify informations about one Journey [PUT]
 You can modify the informations about one Journey in the API. It takes a JSON object containing a title.
 
-+ Request (application/json)
++ Request (application/vnd.mason+json)
 
         {
             "title": "newTitle",
         }
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
     
             {
@@ -521,14 +521,14 @@ You can modify the informations about one Journey in the API. It takes a JSON ob
             }
 
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to modify one journey that does not exist.
     + Body
 
 ### Delete one Journey [DELETE]
 You can delete one Journey in the API.
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
     
             {
@@ -546,7 +546,7 @@ You can delete one Journey in the API.
             }
 
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to delete one journey that does not exist.
     + Body
 
@@ -578,7 +578,7 @@ Represent one day of a journey.
 ### List of Days by Journey [GET]
 You can list all the Days of the database linked to one Journey.
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
     
     {
         "@controls":{
@@ -647,14 +647,14 @@ You can list all the Days of the database linked to one Journey.
 You can create a new Day in the API. It takes a JSON
 object containing the date and the description.
 
-+ Request (application/json)
++ Request (application/vnd.mason+json)
 
         {
             "date": "2020-03-15 18:30:00",
             "description": "Test"
         }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.mason+json)
 
         {
              "@controls":{
@@ -673,7 +673,7 @@ object containing the date and the description.
             
         
 
-+ Response 400 (application/json)
++ Response 400 (application/vnd.mason+json)
 - Journey ID already taken
 
 
@@ -686,7 +686,7 @@ object containing the date and the description.
 ### Get informations about one Day [GET]
 You can get the informations about one Day in the API. It takes a JSON
 object containing the date and the description.
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
             {
                 "@controls": {
                     "self": {
@@ -727,21 +727,21 @@ object containing the date and the description.
             "description": "Description"
         }
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to access one User that does not exist.
     + Body
 
 ### Modify informations about one Day [PUT]
 You can modify the informations about one Day in the API. It takes a JSON
 object containing the date and a description.
-+ Request (application/json)
++ Request (application/vnd.mason+json)
 
         {
             "date": "2020-03-15 18:30:00",
             "description": "Description new"
         }
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
             {
                 "@controls": {
@@ -765,7 +765,7 @@ object containing the date and a description.
             }
 
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to modify one User that does not exist.
     + Body
 
@@ -773,7 +773,7 @@ object containing the date and a description.
 You can delete one Day in the API.
     
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
     
             {
@@ -815,7 +815,7 @@ You can delete one Day in the API.
             }
 
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to delete one Day that does not exist.
     + Body
 
@@ -843,7 +843,7 @@ Represent one image of a day.
 ### List of Images by Day [GET]
 You can list all the Images of the database linked to one Day.
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
     
     {
         "@controls":{
@@ -898,13 +898,13 @@ You can list all the Images of the database linked to one Day.
 You can create a new Image in the API. It takes a JSON
 object containing the extension of the image.
 
-+ Request (application/json)
++ Request (application/vnd.mason+json)
 
         {
             "extension": "png"
         }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.mason+json)
 
         {
              "@controls":{
@@ -923,7 +923,7 @@ object containing the extension of the image.
             
         
 
-+ Response 400 (application/json)
++ Response 400 (application/vnd.mason+json)
 - Journey ID already taken
 
 
@@ -938,7 +938,7 @@ object containing the extension of the image.
 ### Get informations about one Image [GET]
 You can get the Image in the API.
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
             {
                 "@controls": {
                     "self": {
@@ -973,20 +973,20 @@ You can get the Image in the API.
             }
         }
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to access one User that does not exist.
     + Body
 
 ### Modify informations about one Image [PUT]
 You can modify the informations about one Image in the API. It takes a JSON
 object containing the extension.
-+ Request (application/json)
++ Request (application/vnd.mason+json)
 
         {
             "extension": "jpg"
         }
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
     
             {
@@ -1011,7 +1011,7 @@ object containing the extension.
             }
 
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to modify one User that does not exist.
     + Body
 
@@ -1019,7 +1019,7 @@ object containing the extension.
 You can delete one Image in the API.
     
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.mason+json)
 
     
             {
@@ -1058,6 +1058,6 @@ You can delete one Image in the API.
             }
 
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
     Returned if trying to delete one Day that does not exist.
     + Body
