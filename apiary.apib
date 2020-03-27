@@ -44,10 +44,10 @@ An User represent an User in the database. You can easily get the informations a
  - **journeys-by**: List all the journeys made by users. Can be accessed by GET.
  
 ### Semantic descriptors
- - **id**: INT. User’s id number.
- - **username**: STRING. User’s username
- - **password**: STRING. User’s password
- - **email**: STRING. User’s email address
+ - **id**: *Int* User’s id number.
+ - **username**: *String* User’s username
+ - **password**: *String* User’s password
+ - **email**: *String* User’s email address
  
 ## Users Collection [/users]
 
@@ -308,9 +308,9 @@ A Journey represent a Journey Item in the database. You can easily get the infor
  - **up**: List all the journeys collection, where's that journey belongs.
  
 ### Semantic descriptors
- - **id**: INT. Journey’s id number.
- - **user_id**: INT. User’s id number
- - **title**: STRING. Journey’s title.
+ - **id**: *Int* Journey’s id number.
+ - **user_id**: *Int* User’s id number
+ - **title**: *String* Journey’s title.
 
 ## Journeys by User [/users/{user}/journeys]
 + Parameters
@@ -517,6 +517,7 @@ Represent one day of a journey.
  - **images-by**: *Images By Day* that are related to this day.
  
 ### Semantic descriptors
+ - **id**: *Int* Day’s id number.
  - **date**: *Date* Date of the day. 
  - **description**: *String* Description of the day. 
 
@@ -778,6 +779,7 @@ Represent one image of a day.
  - **day-of**: Day that is related to the *Images By Day*.
  
 ### Semantic descriptors
+- **id**: *Int* Image’s id number.
  - **extension**: *String* Extension of the image file. 
 
 ## Images By Day [/users/{user}/journeys/{journey}/days/{day}/images]
