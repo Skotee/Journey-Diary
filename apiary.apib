@@ -58,7 +58,8 @@ You can list all the Users of the database.
         {
            "@controls":{
               "self":{
-                 "href":"/api/users/"
+                 "href":"/api/users/",
+                 "method":"GET"
               },
               "add":{
                  "href":"/api/users/",
@@ -131,18 +132,44 @@ object containing the username, the email and the password.
 
 + Response 201 (application/json)
 
-            {
-                "@controls":{
-                    "self":{
-                        "href":"/api/users/"
+        {
+                "@controls": {
+                    "self": {
+                        "href": "/api/users/5"
                     },
-                    "get-users":{
-                        "href":"/api/users/",
-                        "method":"GET",
-                        "encoding":"json",
-                        "title":"Get list of users of the Journey Diary API"
+                    "edit": {
+                        "href": "/api/users/5",
+                        "method": "PUT",
+                        "encoding": "json",
+                        "title": "Modify one user to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "username",
+                                "password",
+                                "email"
+                            ],
+                            "properties": {
+                                "username": {
+                                    "description": "Username of the account",
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "description": "Email of the account",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "delete": {
+                        "href": "/api/users/5",
+                        "method": "DELETE",
+                        "title": "Delete one user of the Journey Diary API"
                     }
-                }
+                },
+                "username": "newUser",
+                "email": "newmail@mail.com",
+                "password":"newpassword123"
             }
             
 + Response 400
@@ -163,7 +190,7 @@ You can get the informations about one User in the API.
                         "href": "/api/users/20",
                         "method": "GET"
                     },
-                    "modify-user": {
+                    "edit": {
                         "href": "/api/users/20",
                         "method": "PUT",
                         "encoding": "json",
@@ -187,10 +214,9 @@ You can get the informations about one User in the API.
                             }
                         }
                     },
-                    "delete-user": {
+                    "delete": {
                         "href": "/api/users/20",
                         "method": "DELETE",
-                        "encoding": "json",
                         "title": "Delete one user of the Journey Diary API"
                     }
                 },
@@ -218,22 +244,41 @@ object containing the username, the email and the password.
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/20",
-                        "method": "PUT"
+                        "href": "/api/users/5"
                     },
-                    "get-user": {
-                        "href": "/api/users/20",
-                        "method": "GET",
+                    "edit": {
+                        "href": "/api/users/5",
+                        "method": "PUT",
                         "encoding": "json",
-                        "title": "Get informations about one user to the Journey Diary API",
+                        "title": "Modify one user to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "username",
+                                "password",
+                                "email"
+                            ],
+                            "properties": {
+                                "username": {
+                                    "description": "Username of the account",
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "description": "Email of the account",
+                                    "type": "string"
+                                }
+                            }
+                        }
                     },
-                    "delete-user": {
-                        "href": "/api/users/20",
+                    "delete": {
+                        "href": "/api/users/5",
                         "method": "DELETE",
-                        "encoding": "json",
                         "title": "Delete one user of the Journey Diary API"
                     }
-                }
+                },
+                "username": "newUser",
+                "email": "newmail@mail.com",
+                "password":"newpassword123"
             }
 
 
