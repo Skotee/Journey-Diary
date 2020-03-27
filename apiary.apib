@@ -30,7 +30,7 @@ Control to delete an item
 ### add
 Control to add an item to a collection
 
-## Profiles
+# Group User
 
 ## Profile
 
@@ -293,6 +293,24 @@ You can delete one User in the API.
     Returned if trying to delete one User that does not exist.
     + Body
 
+# Group Journey
+
+## Profile
+
+### Description
+A Journey represent a Journey Item in the database. You can easily get the informations about the journey and the different days of the journey.
+
+### Related Profile
+ - *DaysByJourneys*
+ 
+### Link relations
+ - **days-by**: List all the days included in that journey.
+ - **up**: List all the journeys collection, where's that journey belongs.
+ 
+### Semantic descriptors
+ - **id**: INT. Journey’s id number.
+ - **user_id**: INT. User’s id number
+ - **title**: STRING. Journey’s title.
 
 ## Journeys by User [/users/{user}/journeys]
 + Parameters
@@ -387,23 +405,6 @@ object containing the title and the description.
 
 + Response 400 (application/json)
 - Journey ID already taken
-
-## Profile
-
-### Description
-A Journey represent a Journey Item in the database. You can easily get the informations about the journey and the different days of the journey.
-
-### Related Profile
- - *DaysByJourneys*
- 
-### Link relations
- - **days-by**: List all the days included in that journey.
- - **up**: List all the journeys collection, where's that journey belongs.
- 
-### Semantic descriptors
- - **id**: INT. Journey’s id number.
- - **user_id**: INT. User’s id number
- - **title**: STRING. Journey’s title.
  
 ## Journey Item [/users/{user}/journeys/{journey}/]
 + Parameters
