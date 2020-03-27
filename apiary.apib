@@ -301,7 +301,8 @@ You can delete one User in the API.
 A Journey represent a Journey Item in the database. You can easily get the informations about the journey and the different days of the journey.
 
 ### Related Profile
- - *DaysByJourneys*
+ - *User*
+ - *Day*
  
 ### Link relations
  - **days-by**: List all the days included in that journey.
@@ -511,6 +512,10 @@ You can delete one Journey in the API.
 ## Profile
 ### Description
 Represent one day of a journey.
+
+### Related Profile
+ - *Journey*
+ - *Image*
 
 ### Link relations
  - **journey-of**: Journey that is related to the *Days By Journey*.
@@ -774,6 +779,9 @@ You can delete one Day in the API.
 ## Profile
 ### Description
 Represent one image of a day.
+
+### Related Profile
+ - *Day*
 
 ### Link relations
  - **day-of**: Day that is related to the *Images By Day*.
