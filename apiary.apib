@@ -32,8 +32,23 @@ Control to add an item to a collection
 
 ## Profiles
 
-TODO : Profiles
+## Profile
 
+### Description
+An User represent an User in the database. You can easily get the informations about the user.
+
+### Related Profile
+ - *Journey*
+ 
+### Link relations
+ - **journeys-by**: List all the journeys made by users. Can be accessed by GET.
+ 
+### Semantic descriptors
+ - **id**: INT. User’s id number.
+ - **username**: STRING. User’s username
+ - **password**: STRING. User’s password
+ - **email**: STRING. User’s email address
+ 
 ## Users Collection [/users]
 
 ### List All Users [GET]
@@ -341,7 +356,7 @@ You can list all the Users of the database linked to one User.
       ]
    }
 
-### Create a New Jouney [POST]
+### Create a New Journey [POST]
 You can create a new Journey in the API. It takes a JSON
 object containing the title and the description.
 
@@ -373,7 +388,23 @@ object containing the title and the description.
 + Response 400 (application/json)
 - Journey ID already taken
 
+## Profile
 
+### Description
+A Journey represent a Journey Item in the database. You can easily get the informations about the journey and the different days of the journey.
+
+### Related Profile
+ - *DaysByJourneys*
+ 
+### Link relations
+ - **days-by**: List all the days included in that journey.
+ - **up**: List all the journeys collection, where's that journey belongs.
+ 
+### Semantic descriptors
+ - **id**: INT. Journey’s id number.
+ - **user_id**: INT. User’s id number
+ - **title**: STRING. Journey’s title.
+ 
 ## Journey Item [/users/{user}/journeys/{journey}/]
 + Parameters
     + user - Id of the user
