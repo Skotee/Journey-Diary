@@ -8,8 +8,6 @@ some websites that divide journeys in articles.
 
 ## Link Relations
 
-TODO: correct with the graph
-
 Section describing the relations linking the different concepts of the API.
 
 ### users-all
@@ -58,8 +56,7 @@ You can list all the Users of the database.
         {
            "@controls":{
               "self":{
-                 "href":"/api/users/",
-                 "method":"GET"
+                 "href":"/api/users/"
               },
               "add":{
                  "href":"/api/users/",
@@ -122,7 +119,7 @@ You can list all the Users of the database.
 You can create a new User in the API. It takes a JSON
 object containing the username, the email and the password.
 
-+ Request (application/vnd.mason+json)
++ Request (application/json)
 
         {
             "username": "newUser",
@@ -165,6 +162,14 @@ object containing the username, the email and the password.
                         "href": "/api/users/5",
                         "method": "DELETE",
                         "title": "Delete one user of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/",
+                        "title":"Collection of users"
+                    },
+                    "journeys-by":{
+                        "href":"/api/users/20/journeys/",
+                        "title":"Collection of journeys associated to this user"
                     }
                 },
                 "username": "newUser",
@@ -187,8 +192,7 @@ You can get the informations about one User in the API.
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/20",
-                        "method": "GET"
+                        "href": "/api/users/20"
                     },
                     "edit": {
                         "href": "/api/users/20",
@@ -218,6 +222,14 @@ You can get the informations about one User in the API.
                         "href": "/api/users/20",
                         "method": "DELETE",
                         "title": "Delete one user of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/",
+                        "title":"Collection of users"
+                    },
+                    "journeys-by":{
+                        "href":"/api/users/20/journeys/",
+                        "title":"Collection of journeys associated to this user"
                     }
                 },
                 "username": "maellamaella",
@@ -231,7 +243,7 @@ You can get the informations about one User in the API.
 ### Modify informations about one User [PUT]
 You can modify the informations about one User in the API. It takes a JSON
 object containing the username, the email and the password.
-+ Request (application/vnd.mason+json)
++ Request (application/json)
 
         {
             "username": "newUser",
@@ -274,6 +286,14 @@ object containing the username, the email and the password.
                         "href": "/api/users/5",
                         "method": "DELETE",
                         "title": "Delete one user of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/",
+                        "title":"Collection of users"
+                    },
+                    "journeys-by":{
+                        "href":"/api/users/20/journeys/",
+                        "title":"Collection of journeys associated to this user"
                     }
                 },
                 "username": "newUser",
@@ -291,46 +311,6 @@ You can delete one User in the API.
     
 
 + Response 200 (application/vnd.mason+json)
-
-    
-            {
-                "@controls": {
-                    "self": {
-                        "href": "/api/users/20"
-                        "method": "DELETE"
-                    },
-                    "modify-user": {
-                        "href": "/api/users/20",
-                        "method": "PUT",
-                        "encoding": "json",
-                        "title": "Modify one user to the Journey Diary API",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "username",
-                                "password",
-                                "email"
-                            ],
-                            "properties": {
-                                "username": {
-                                    "description": "Username of the account",
-                                    "type": "string"
-                                },
-                                "email": {
-                                    "description": "Email of the account",
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "get-user": {
-                        "href": "/api/users/20",
-                        "method": "GET",
-                        "encoding": "json",
-                        "title": "Get informations about one user to the Journey Diary API",
-                    }
-                }
-            }
 
 
 + Response 404 (application/vnd.mason+json)
@@ -354,10 +334,9 @@ A Journey represent a Journey Item in the database. You can easily get the infor
  
 ### Semantic descriptors
  - **id**: *Int* Journey’s id number.
- - **user_id**: *Int* User’s id number
  - **title**: *String* Journey’s title.
 
-## Journeys by User [/users/{user}/journeys]
+## Journeys By User [/users/{user}/journeys]
 + Parameters
     + user - Id of the user
 
@@ -371,59 +350,62 @@ You can list all the Users of the database linked to one User.
             "self":{
                 "href":"/api/users/1/journeys/"
             },
-            "add-journey":{
+            "add":{
                 "href":"/api/users/1/journeys/",
-             "method":"POST",
-             "encoding":"json",
-             "title":"Add journey to the Journey Diary API",
-             "schema":{
-                "type":"object",
-                "required":[
-                   "title",
-                   "description",
-                ],
-                "properties":{
-                   "title":{
-                      "description":"Title of the journey",
-                      "type":"string"
+                "method":"POST",
+                "encoding":"json",
+                "title":"Add Journey to the Journey Diary API",
+                "schema":{
+                    "type":"object",
+                    "required":[
+                        "title",
+                    ],
+                    "properties":{
+                        "title":{
+                            "description":"Title of the journey",
+                            "type":"string"
+                        }
+                    }
+                }
+            },
+            "author":{
+                "href":"/api/users/1/",
+                "title":"User related to this collection of Journeys"
+            }
+        },
+        "items":[
+            {
+                "title":"1st Journey",
+                "@controls":{
+                   "self":{
+                      "href":"/api/users/1/journeys/1"
                    }
                 }
-         }
-      }
-    },
-      "items":[
-         {
-            "title":"1st Journey",
-            "@controls":{
-               "self":{
-                  "href":"/api/users/1/journeys/1"
-               }
-            }
-         },
-         {
-            "title":"2nd Journey",
-            "@controls":{
-               "self":{
-                  "href":"/api/users/1/journeys/2"
-               }
-            }
-         },
-         {
-            "title":"3rd journey",
-            "@controls":{
-               "self":{
-                  "href":"/api/users/1/journeys/3"
-               }
-            }
-         }
-      ]
+            },
+             {
+                "title":"2nd Journey",
+                "@controls":{
+                   "self":{
+                      "href":"/api/users/1/journeys/2"
+                   }
+                }
+             },
+             {
+                "title":"3rd journey",
+                "@controls":{
+                   "self":{
+                      "href":"/api/users/1/journeys/3"
+                   }
+                }
+             }
+        ]
    }
 
 ### Create a New Journey [POST]
 You can create a new Journey in the API. It takes a JSON
 object containing the title and the description.
 
-+ Request (application/vnd.mason+json)
++ Request (application/json)
 
         {
             "title": "Test"
@@ -431,20 +413,46 @@ object containing the title and the description.
 
 + Response 201 (application/vnd.mason+json)
 
-        {
-             "@controls":{
-                    "self":{
-                        "href":"/api/users/1/journeys/"
+           {
+                "@controls": {
+                    "self": {
+                        "href": "/api/users/1/journeys/1"
                     },
-                    "get-journeys":{
-                        "href":"/api/users/1/journeys/",
-                        "method":"GET",
-                        "encoding":"json",
-                        "title":"Get list of journeys of the Journey Diary API"
+                    "edit": {
+                        "href": "/api/users/1/journeys/1",
+                        "method": "PUT",
+                        "encoding": "json",
+                        "title": "Modify journey to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "title"
+                            ],
+                            "properties": {
+                                "title": {
+                                    "description": "Title of the journey",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "delete": {
+                        "href": "/api/users/1/journeys/1",
+                        "method": "DELETE",
+                        "title": "Delete one journey of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/1/journeys",
+                        "title":"Collection of journeys of this journey"
+                    },
+                    "days-by":{
+                        "href":"/api/users/1/journeys/1/days",
+                        "title":"Collection of days associated to this journey"
                     }
-                }
+                },
+                "title": "Test"
             }
-        }
+        
             
         
 
@@ -467,7 +475,7 @@ You can get the informations about one Journey in the API.
                     "self": {
                         "href": "/api/users/1/journeys/1"
                     },
-                    "modify-journey": {
+                    "edit": {
                         "href": "/api/users/1/journeys/1",
                         "method": "PUT",
                         "encoding": "json",
@@ -482,13 +490,25 @@ You can get the informations about one Journey in the API.
                                     "description": "Title of the journey",
                                     "type": "string"
                                 }
-                                
                             }
                         }
+                    },
+                    "delete": {
+                        "href": "/api/users/1/journeys/1",
+                        "method": "DELETE",
+                        "title": "Delete one journey of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/1/journeys",
+                        "title":"Collection of journeys of this journey"
+                    },
+                    "days-by":{
+                        "href":"/api/users/1/journeys/1/days",
+                        "title":"Collection of days associated to this journey"
                     }
-            },
-            "title": "Title",
-        }
+                },
+                "title": "Title"
+            }
 
 + Response 404 (application/vnd.mason+json)
     Returned if trying to access one Journey that does not exist.
@@ -497,10 +517,10 @@ You can get the informations about one Journey in the API.
 ### Modify informations about one Journey [PUT]
 You can modify the informations about one Journey in the API. It takes a JSON object containing a title.
 
-+ Request (application/vnd.mason+json)
++ Request (application/json)
 
         {
-            "title": "newTitle",
+            "title": "newTitle"
         }
 
 + Response 200 (application/vnd.mason+json)
@@ -509,15 +529,41 @@ You can modify the informations about one Journey in the API. It takes a JSON ob
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/20/journeys/30"
+                        "href": "/api/users/1/journeys/1"
                     },
-                    "modify-user": {
-                        "href": "/api/users/20/journeys/30",
-                        "method": "GET",
+                    "edit": {
+                        "href": "/api/users/1/journeys/1",
+                        "method": "PUT",
                         "encoding": "json",
-                        "title": "Get informations about one journey to the Journey Diary API",
+                        "title": "Modify journey to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "title"
+                            ],
+                            "properties": {
+                                "title": {
+                                    "description": "Title of the journey",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "delete": {
+                        "href": "/api/users/1/journeys/1",
+                        "method": "DELETE",
+                        "title": "Delete one journey of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/1/journeys",
+                        "title":"Collection of journeys of this journey"
+                    },
+                    "days-by":{
+                        "href":"/api/users/1/journeys/1/days",
+                        "title":"Collection of days associated to this journey"
                     }
-                }
+                },
+                "title": "newTitle"
             }
 
 
@@ -529,21 +575,6 @@ You can modify the informations about one Journey in the API. It takes a JSON ob
 You can delete one Journey in the API.
 
 + Response 200 (application/vnd.mason+json)
-
-    
-            {
-                "@controls": {
-                    "self": {
-                        "href": "/api/users/20/journeys/30"
-                    },
-                    "modify-user": {
-                        "href": "/api/users/20/journeys/30",
-                        "method": "GET",
-                        "encoding": "json",
-                        "title": "Get informations about one journey to the Journey Diary API",
-                    }
-                }
-            }
 
 
 + Response 404 (application/vnd.mason+json)
@@ -583,8 +614,7 @@ You can list all the Days of the database linked to one Journey.
     {
         "@controls":{
             "self":{
-                "href":"/api/users/1/journeys/1/days",
-                "method":"GET"
+                "href":"/api/users/1/journeys/1/days"
             },
             "add":{
                 "href":"/api/users/1/journeys/1/days",
@@ -592,25 +622,25 @@ You can list all the Days of the database linked to one Journey.
                 "encoding":"json",
                 "title":"Add a Day to the Journey Diary API",
                 "schema":{
-                "type":"object",
-                "required":[
-                   "date",
-                   "description",
-                ],
-                "properties":{
-                    "date":{
-                      "description":"Date of the day",
-                      "type":"date"
-                    },
-                    "description":{
-                      "description":"Description of the Day",
-                      "type":"string"
+                    "type":"object",
+                    "required":[
+                       "date",
+                       "description",
+                    ],
+                    "properties":{
+                        "date":{
+                          "description":"Date of the day",
+                          "type":"date"
+                        },
+                        "description":{
+                          "description":"Description of the Day",
+                          "type":"string"
+                        }
                     }
                 }
             },
             "journey-of":{
                 "href":"/api/users/1/journeys/1/",
-                "encoding":"json",
                 "title":"Journey that is related to these days"
             }
         }
@@ -647,7 +677,7 @@ You can list all the Days of the database linked to one Journey.
 You can create a new Day in the API. It takes a JSON
 object containing the date and the description.
 
-+ Request (application/vnd.mason+json)
++ Request (application/json)
 
         {
             "date": "2020-03-15 18:30:00",
@@ -657,18 +687,50 @@ object containing the date and the description.
 + Response 201 (application/vnd.mason+json)
 
         {
-             "@controls":{
-                    "self":{
-                        "href":"/api/users/1/journeys/1/days"
+                "@controls": {
+                    "self": {
+                        "href": "/api/users/20/journeys/30/days/1"
                     },
-                    "get-days":{
-                        "href":"/api/users/1/journeys/1/days",
-                        "method":"GET",
-                        "encoding":"json",
-                        "title":"Get list of days of the Journey Diary API"
+                    "edit": {
+                        "href": "/api/users/20/journeys/30/days/1",
+                        "method": "PUT",
+                        "encoding": "json",
+                        "title": "Modify one Day of the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "date",
+                                "description"
+                            ],
+                            "properties": {
+                                "date": {
+                                    "description": "Date of the day",
+                                    "type": "date"
+                                },
+                                "description": {
+                                    "description": "Description of the day",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "delete": {
+                        "href": "/api/users/20/journeys/30/days/1",
+                        "method": "DELETE",
+                        "encoding": "json",
+                        "title": "Delete one day of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/20/journeys/30/days",
+                        "title":"Collection of days of this day"
+                    },
+                    "images-by":{
+                        "href":"/api/users/20/journeys/30/days/1/images",
+                        "title":"Collection of images associated to this day"
                     }
-                }
-            }
+            },
+            "date": "2020-03-15 18:30:00",
+            "description": "Test"
         }
             
         
@@ -687,17 +749,17 @@ object containing the date and the description.
 You can get the informations about one Day in the API. It takes a JSON
 object containing the date and the description.
 + Response 200 (application/vnd.mason+json)
+
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/20/journeys/30/days/1/",
-                        "method": "GET"
+                        "href": "/api/users/20/journeys/30/days/1"
                     },
-                    "modify-day": {
-                        "href": "/api/users/20/journeys/30/days/1/",
+                    "edit": {
+                        "href": "/api/users/20/journeys/30/days/1",
                         "method": "PUT",
                         "encoding": "json",
-                        "title": "Modify one date to the Journey Diary API",
+                        "title": "Modify one Day of the Journey Diary API",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -716,11 +778,19 @@ object containing the date and the description.
                             }
                         }
                     },
-                    "delete-day": {
-                        "href": "/api/users/20/journeys/30/days/1/",
+                    "delete": {
+                        "href": "/api/users/20/journeys/30/days/1",
                         "method": "DELETE",
                         "encoding": "json",
                         "title": "Delete one day of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/20/journeys/30/days",
+                        "title":"Collection of days of this day"
+                    },
+                    "images-by":{
+                        "href":"/api/users/20/journeys/30/days/1/images",
+                        "title":"Collection of images associated to this day"
                     }
             },
             "date": "2020-03-15 18:30:00",
@@ -734,7 +804,7 @@ object containing the date and the description.
 ### Modify informations about one Day [PUT]
 You can modify the informations about one Day in the API. It takes a JSON
 object containing the date and a description.
-+ Request (application/vnd.mason+json)
++ Request (application/json)
 
         {
             "date": "2020-03-15 18:30:00",
@@ -746,47 +816,13 @@ object containing the date and a description.
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/20/journeys/30/days/1/",
-                        "method": "PUT"
+                        "href": "/api/users/20/journeys/30/days/1"
                     },
-                    "get-day": {
-                        "href": "/api/users/20/journeys/30/days/1/",
-                        "method": "GET",
-                        "encoding": "json",
-                        "title": "Get informations about one day to the Journey Diary API",
-                    },
-                    "delete-day": {
-                        "href": "/api/users/20/journeys/30/days/1/",
-                        "method": "DELETE",
-                        "encoding": "json",
-                        "title": "Delete one day of the Journey Diary API"
-                    }
-                }
-            }
-
-
-+ Response 404 (application/vnd.mason+json)
-    Returned if trying to modify one User that does not exist.
-    + Body
-
-### Delete one Day [DELETE]
-You can delete one Day in the API.
-    
-
-+ Response 200 (application/vnd.mason+json)
-
-    
-            {
-                "@controls": {
-                    "self": {
-                        "href": "/api/users/20/journeys/30/days/1/",
-                        "method": "DELETE"
-                    },
-                    "modify-day": {
-                        "href": "/api/users/20/journeys/30/days/1/",
+                    "edit": {
+                        "href": "/api/users/20/journeys/30/days/1",
                         "method": "PUT",
                         "encoding": "json",
-                        "title": "Modify one day to the Journey Diary API",
+                        "title": "Modify one Day of the Journey Diary API",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -805,14 +841,35 @@ You can delete one Day in the API.
                             }
                         }
                     },
-                    "get-day": {
-                        "href": "/api/users/20/journeys/30/days/1/",
-                        "method": "GET",
+                    "delete": {
+                        "href": "/api/users/20/journeys/30/days/1",
+                        "method": "DELETE",
                         "encoding": "json",
-                        "title": "Get informations about one day to the Journey Diary API",
+                        "title": "Delete one day of the Journey Diary API"
+                    },
+                    "up":{
+                        "href":"/api/users/20/journeys/30/days",
+                        "title":"Collection of days of this day"
+                    },
+                    "images-by":{
+                        "href":"/api/users/20/journeys/30/days/1/images",
+                        "title":"Collection of images associated to this day"
                     }
-                }
-            }
+            },
+            "date": "2020-03-15 18:30:00",
+            "description": "Description new"
+        }
+
+
++ Response 404 (application/vnd.mason+json)
+    Returned if trying to modify one User that does not exist.
+    + Body
+
+### Delete one Day [DELETE]
+You can delete one Day in the API.
+    
+
++ Response 200 (application/vnd.mason+json)
 
 
 + Response 404 (application/vnd.mason+json)
@@ -850,7 +907,7 @@ You can list all the Images of the database linked to one Day.
             "self":{
                 "href":"/api/users/1/journeys/1/days/1/images"
             },
-            "add-day":{
+            "add":{
                 "href":"/api/users/1/journeys/1/days/1/images",
                 "method":"POST",
                 "encoding":"json",
@@ -867,6 +924,10 @@ You can list all the Images of the database linked to one Day.
                        }
                     }
                 }
+            },
+            "day-of":{
+                "href":"/api/users/1/journeys/1/days/1",
+                "title":"Day that is related to these images"
             }
         },
         "items":[
@@ -898,7 +959,7 @@ You can list all the Images of the database linked to one Day.
 You can create a new Image in the API. It takes a JSON
 object containing the extension of the image.
 
-+ Request (application/vnd.mason+json)
++ Request (application/json)
 
         {
             "extension": "png"
@@ -942,10 +1003,9 @@ You can get the Image in the API.
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
-                        "method": "GET"
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg"
                     },
-                    "modify-image": {
+                    "edit": {
                         "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
                         "method": "PUT",
                         "encoding": "json",
@@ -959,19 +1019,21 @@ You can get the Image in the API.
                                 "extension": {
                                     "description": "Extension of the image",
                                     "type": "string"
-                                
                                 }
                             }
                         }
                     },
-                    "delete-image": {
+                    "delete": {
                         "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
                         "method": "DELETE",
-                        "encoding": "json",
                         "title": "Delete one image of the Journey Diary API"
+                    },
+                    "up":{
+                        "href": "/api/users/10/journeys/20/days/30/images",
+                        "title":"Collection of images of this image"
                     }
+                }
             }
-        }
 
 + Response 404 (application/vnd.mason+json)
     Returned if trying to access one User that does not exist.
@@ -980,7 +1042,7 @@ You can get the Image in the API.
 ### Modify informations about one Image [PUT]
 You can modify the informations about one Image in the API. It takes a JSON
 object containing the extension.
-+ Request (application/vnd.mason+json)
++ Request (application/json)
 
         {
             "extension": "jpg"
@@ -992,20 +1054,34 @@ object containing the extension.
             {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
-                        "method": "PUT"
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg"
                     },
-                    "get-image": {
+                    "edit": {
                         "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
-                        "method": "GET",
+                        "method": "PUT",
                         "encoding": "json",
-                        "title": "Get one image of the Journey Diary API",
+                        "title": "Modify one image to the Journey Diary API",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "extension"
+                            ],
+                            "properties": {
+                                "extension": {
+                                    "description": "Extension of the image",
+                                    "type": "string"
+                                }
+                            }
+                        }
                     },
-                    "delete-image": {
+                    "delete": {
                         "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
                         "method": "DELETE",
-                        "encoding": "json",
                         "title": "Delete one image of the Journey Diary API"
+                    },
+                    "up":{
+                        "href": "/api/users/10/journeys/20/days/30/images",
+                        "title":"Collection of images of this image"
                     }
                 }
             }
@@ -1022,13 +1098,12 @@ You can delete one Image in the API.
 + Response 200 (application/vnd.mason+json)
 
     
-            {
+           {
                 "@controls": {
                     "self": {
-                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg", 
-                        "method": "DELETE"
+                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg"
                     },
-                    "modify-image": {
+                    "edit": {
                         "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
                         "method": "PUT",
                         "encoding": "json",
@@ -1036,23 +1111,24 @@ You can delete one Image in the API.
                         "schema": {
                             "type": "object",
                             "required": [
-                                "date",
-                                "description"
+                                "extension"
                             ],
                             "properties": {
                                 "extension": {
                                     "description": "Extension of the image",
                                     "type": "string"
-
                                 }
                             }
                         }
                     },
-                    "get-image": {
+                    "delete": {
                         "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
-                        "method": "GET",
-                        "encoding": "json",
-                        "title": "Get one image to the Journey Diary API",
+                        "method": "DELETE",
+                        "title": "Delete one image of the Journey Diary API"
+                    },
+                    "up":{
+                        "href": "/api/users/10/journeys/20/days/30/images",
+                        "title":"Collection of images of this image"
                     }
                 }
             }
