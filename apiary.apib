@@ -506,7 +506,21 @@ You can delete one Journey in the API.
     + Body
 
 
-## Days by Journey [/users/{user}/journeys/{journey}/days]
+
+# Group Day
+## Profile
+### Description
+Represent one day of a journey.
+
+### Link relations
+ - **journey-of**: Journey that is related to the *Days By Journey*.
+ - **images-by**: *Images By Day* that are related to this day.
+ 
+### Semantic descriptors
+ - **date**: *Date* Date of the day. 
+ - **description**: *String* Description of the day. 
+
+## Days By Journey [/users/{user}/journeys/{journey}/days]
 + Parameters
     + user - Id of the user
     + journey - Id of the journey
@@ -519,31 +533,37 @@ You can list all the Days of the database linked to one Journey.
     {
         "@controls":{
             "self":{
-                "href":"/api/users/1/journeys/1/days"
-            },
-            "add-day":{
                 "href":"/api/users/1/journeys/1/days",
-             "method":"POST",
-             "encoding":"json",
-             "title":"Add Day to the Journey Diary API",
-             "schema":{
+                "method":"GET"
+            },
+            "add":{
+                "href":"/api/users/1/journeys/1/days",
+                "method":"POST",
+                "encoding":"json",
+                "title":"Add a Day to the Journey Diary API",
+                "schema":{
                 "type":"object",
                 "required":[
                    "date",
                    "description",
                 ],
                 "properties":{
-                   "date":{
+                    "date":{
                       "description":"Date of the day",
                       "type":"date"
-                   },
-                   "description":{
+                    },
+                    "description":{
                       "description":"Description of the Day",
                       "type":"string"
-                   }
+                    }
                 }
-         }
-      }
+            },
+            "journey-of":{
+                "href":"/api/users/1/journeys/1/",
+                "encoding":"json",
+                "title":"Journey that is related to these days"
+            }
+        }
     },
       "items":[
          {
@@ -555,7 +575,7 @@ You can list all the Days of the database linked to one Journey.
             }
          },
          {
-            "date": "2020-03-15 18:30:00",
+            "date": "2020-03-16 18:30:00",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/2"
@@ -563,7 +583,7 @@ You can list all the Days of the database linked to one Journey.
             }
          },
          {
-            "date": "2020-03-15 18:30:00",
+            "date": "2020-03-17 18:30:00",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/3"
@@ -749,8 +769,18 @@ You can delete one Day in the API.
     Returned if trying to delete one Day that does not exist.
     + Body
 
+# Group Image
+## Profile
+### Description
+Represent one image of a day.
 
-## Images by Day [/users/{user}/journeys/{journey}/days/{day}/images]
+### Link relations
+ - **day-of**: Day that is related to the *Images By Day*.
+ 
+### Semantic descriptors
+ - **extension**: *String* Extension of the image file. 
+
+## Images By Day [/users/{user}/journeys/{journey}/days/{day}/images]
 + Parameters
     + user - Id of the user
     + journey - Id of the journey
