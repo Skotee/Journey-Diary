@@ -12,6 +12,10 @@ __Remember to include all required documentation and HOWTOs, including how to cr
 Flask - pip install Flask </br>
 Pytest - pip install pytest </br>
 Pytest-cov - pip install pytest-cov </br>
+flask_restful - pip install flask_restful </br>
+flask_sqlalchemy - pip install flask_sqlalchemy </br>
+  
+<h2>How to setup the framework </h2>
   
 <h2> Define database and version utilized </h2>
 MySQL is an Oracle-backed open source relational database management system based on SQL.  For this project we have used the 8.0.19.0 version which is the most recent version. 
@@ -26,4 +30,7 @@ Import .sql file with sql script which contains data for each column for each ta
 
 Type in command line this command: pytest in the folder where db_test.py is. db_test and app should be in the same folder. Test will run immediately.
 
+<h2> How to setup (e.g. modifying any configuration files) and run Journey Diary's RESTful API. </h2>
+
+<h2>The URL to access your API (usually nameofapplication/api/version/)</h2>
 
