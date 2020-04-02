@@ -10,7 +10,8 @@ Users
 class UserCollection(Resource):
 
     def get(self):
-        return []
+        return db.session.query(user).all()
+
 
     def post(self):
         if not request.json:
