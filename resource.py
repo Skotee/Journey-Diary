@@ -10,12 +10,25 @@ Users
 class UserCollection(Resource):
 
     def get(self):
-        return []
+        db_user = User.query.first()
+        if db_user is None:
+            return create_error_response(404, "Not found", 
+                "No sensor was found with the name {}".format(product)
+            )
+        body = InventoryBuilder()
+        body.add_namespace("prohub", LINK_RELATIONS_URL)
+        body.add_control("profile", USER_PROFILE)
+        body.add_control_add_user()
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def post(self):
         if not request.json:
             return "", 415
         try:
+            validate(request.json, self.get_schema())
+        except ValidationError as e:
+            return self.create_error_response(400, "Invalid JSON document", str(e))
+
             us = user(username=request.json["username"],
                         password=request.json["password"],
                         email=request.json["email"])
@@ -30,10 +43,53 @@ class UserCollection(Resource):
 class UserItem(Resource):
 
     def get(self, user):
-        pass
+        db_user = User.query.first()
+        if db_user is None:
+            return create_error_response(404, "Not found", 
+                "No sensor was found with the name {}".format(product)
+            )
+
+        body = InventoryBuilder(
+            handle = request.json["handle"],
+            weight = request.json["weight"],
+            price = request.json["price"]
+            )
+
+        body.add_namespace("prohub", LINK_RELATIONS_URL)
+        body.add_control("profile", USER_PROFILE)
+        body.add_control("item", UserCollection)
+        body.add_control_edit_user(self,handle)
+        body.add_control_delete_user(self,handle)
+
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def put(self, user):
-        pass
+        if not request.json:
+            return self.create_error_response(415, "Unsupported media type",
+                "Requests must be JSON"
+            )
+        if User.query.filter_by(handle=handle).first() is None: 
+        	return self.create_error_response(415, "User not found",
+                "User doesn't exists"
+            )
+
+        try:
+            validate(request.json, self.get_schema())
+        except ValidationError as e:
+            return self.create_error_response(400, "Invalid JSON document", str(e))
+
+        try:
+            User.query.filter_by(handle=handle).first().update({"weight":request.json["weight"]})
+            User.query.filter_by(handle=handle).first().update({"price":request.json["price"]})
+            db.session.commit()
+        except IntegrityError:
+            return self.create_error_response(409, "Already exists", 
+                "User with handle " + request.json["handle"] + " already exists.".format(request.json["handle"])
+            )
+        
+        return Response(status=201, headers={
+            "Location": api.url_for(UserItem, user=user.handle)
+        })
 
     def delete(self, user):
         pass
