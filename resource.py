@@ -4,7 +4,9 @@ from models import user, journey, day, image, db, app, api
 from sqlalchemy import exc
 from utils import ModelBuilder
 from datetime import datetime
+from jsonschema import validate, ValidationError
 import json
+import utils
 
 MASON = "application/vnd.mason+json"
 
@@ -18,7 +20,7 @@ class UserCollection(Resource):
         body = ModelBuilder(items=[])
         for us in user.query.all():
             item = ModelBuilder(username=us.username)
-            item.add_control("self", api.url_for(UserItem, user=us.id))
+            item.add_control("self", api.url_for(UserItem, userid=us.id))
             body["items"].append(item)
         
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
@@ -26,29 +28,60 @@ class UserCollection(Resource):
 
     def post(self):
         if not request.json:
-            return "", 415
+            return utils.create_error_response(415, "Unsupported media type", "Requests must be JSON")
         try:
-            us = user(username=request.json["username"],
-                        password=request.json["password"],
-                        email=request.json["email"])
+            validate(request.json, utils.user_schema())
+        except ValidationError as e:
+            return utils.create_error_response(400, "Invalid JSON document", str(e))
+        try:
+            us = user(username=request.json["username"], password=request.json["password"], email=request.json["email"])
             db.session.add(us)
             db.session.commit()
         except KeyError:
-            return "", 400
+            return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
-            return "", 409
-        return "", 201
+            return utils.create_error_response(409, "Already exists", "User with username " + str(request.json["username"]) + " already exists.")
+        return "", 201 #todo
 
 class UserItem(Resource):
 
-    def get(self, user):
-        pass
+    def get(self, userid):
+        us = user.query.filter_by(id = userid).first()
+        if us is None: 
+            return utils.create_error_response(404, "User not found", "User with the id "+ userid +" doesn't exist")
+        body = ModelBuilder(username = us.username, email = us.email)
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
-    def put(self, user):
-        pass
+    def put(self, userid):
+        if not request.json:
+            return utils.create_error_response(415, "Unsupported media type","Requests must be JSON")
+        us = user.query.filter_by(id = userid).first()
+        if us is None: 
+            return utils.create_error_response(404, "User not found", "User with the id "+ userid +" doesn't exist")
+        try:
+            validate(request.json, utils.user_schema())
+        except ValidationError as e:
+            return utils.create_error_response(400, "Invalid JSON document", str(e))
+        us.username = request.json["username"]
+        us.password = request.json["password"]
+        us.email = request.json["email"]
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            return utils.create_error_response(409, "Already exists", "User with username " + str(request.json["username"]) + " already exists.")
+        return "",201 #todo
 
-    def delete(self, user):
-        pass
+    def delete(self, userid):
+        us = user.query.filter_by(id = userid).first()
+        if us is None: 
+            return utils.create_error_response(404, "User not found", "User with the id "+ userid +" doesn't exist")
+        db.session.delete(us)
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            return utils.create_error_response(409, "IntegrityError", "IntegrityError")
+        body = ModelBuilder()
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
 '''
 Journeys
@@ -56,38 +89,69 @@ Journeys
 
 class JourneysByUser(Resource):
 
-    def get(self,user):
+    def get(self, userid):
         body = ModelBuilder(items=[])
-        for jo in journey.query.filter_by(user_id=user).all():
+        for jo in journey.query.filter_by(user_id=userid).all():
             item = ModelBuilder(title=jo.title)
-            item.add_control("self", api.url_for(JourneyItem, user=user, journey=jo.id))
+            item.add_control("self", api.url_for(JourneyItem, userid=userid, journeyid=jo.id))
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
-    def post(self,user):
-        if not request.json :
-            return "", 415
+    def post(self, userid):
+        if not request.json:
+            return utils.create_error_response(415, "Unsupported media type", "Requests must be JSON")
         try:
-            jo = journey(title=request.json["title"],
-                        user_id = user)
+            validate(request.json, utils.journey_schema())
+        except ValidationError as e:
+            return utils.create_error_response(400, "Invalid JSON document", str(e))
+        try:
+            jo = journey(title=request.json["title"], user_id = userid)
             db.session.add(jo)
             db.session.commit()
         except KeyError:
-            return "", 400
+            return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
-            return "", 409
-        return "", 201
+            return utils.create_error_response(404, "Integrity Error", "User with id " + str(userid) + " doesn't exist.")
+        return "", 201 #todo
 
 class JourneyItem(Resource):
 
-    def get(self, user, journey):
-        pass
+    def get(self, userid, journeyid):
+        jo = journey.query.filter_by(id = journeyid).first()
+        if jo is None: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
+        body = ModelBuilder(title = jo.title)
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
-    def put(self, user, journey):
-        pass
+    def put(self, userid, journeyid):
+        if not request.json:
+            return utils.create_error_response(415, "Unsupported media type","Requests must be JSON")
+        jo = journey.query.filter_by(id = journeyid).first()
+        if jo is None: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
+        try:
+            validate(request.json, utils.journey_schema())
+        except ValidationError as e:
+            return utils.create_error_response(400, "Invalid JSON document", str(e))
+        jo.title = request.json["title"]
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            return self.create_error_response(409, "Integrity Error", "Database problem.")
+        return "",201 #todo
 
-    def delete(self, user, journey):
-        pass
+
+    def delete(self, userid, journeyid):
+        jo = journey.query.filter_by(id = journeyid).first()
+        if jo is None:
+            return utils.create_error_response(404, "Journey not found", "Journey with the id "+ journeyid +" doesn't exist")
+        db.session.delete(jo)
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            return utils.create_error_response(409, "IntegrityError", "IntegrityError")
+        body = ModelBuilder()
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
 
 '''
@@ -96,39 +160,68 @@ Days
 
 class DaysByJourney(Resource):
 
-    def get(self, user, journey):
+    def get(self, userid, journeyid):
         body = ModelBuilder(items=[])
-        for da in day.query.filter_by(journey_id=journey).all():
+        for da in day.query.filter_by(journey_id=journeyid).all():
             item = ModelBuilder(date=da.date.strftime("%d-%m-%Y"))
-            item.add_control("self", api.url_for(DayItem, user=user, journey=journey, day=da.id))
+            item.add_control("self", api.url_for(DayItem, userid=userid, journeyid=journeyid, dayid=da.id))
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
-    def post(self, user, journey):
-        if not request.json :
-            return "", 415
+    def post(self, userid, journeyid):
+        if not request.json:
+            return utils.create_error_response(415, "Unsupported media type", "Requests must be JSON")
         try:
-            da = day(date=request.json["date"],
-                        description = request.json["description"],
-                        journey_id = journey)
+            validate(request.json, utils.day_schema())
+        except ValidationError as e:
+            return utils.create_error_response(400, "Invalid JSON document", str(e))
+        try:
+            da = day(date=request.json["date"], description = request.json["description"], journey_id = journeyid)
             db.session.add(da)
             db.session.commit()
         except KeyError:
-            return "", 400
+            return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
-            return "", 409
-        return "", 201
+            return utils.create_error_response(409, "Integrity Error", "Journey with id " + str(journeyid) + " doesn't exist.")
+        return "", 201 #todo
 
 class DayItem(Resource):
 
-    def get(self, user, journey, day):
-        pass
+    def get(self, userid, journeyid, dayid):
+        da = day.query.filter_by(id = dayid).first()
+        body = ModelBuilder(date = da.date.strftime("%d-%m-%Y"), description = da.description)
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
-    def put(self, user, journey, day):
-        pass
+    def put(self, userid, journeyid, dayid):
+        if not request.json:
+            return utils.create_error_response(415, "Unsupported media type","Requests must be JSON")
+        da = day.query.filter_by(id = dayid).first()
+        if da is None: 
+            return utils.create_error_response(409, "Day not found", "Day doesn't exist")
+        try:
+            validate(request.json, utils.day_schema())
+        except ValidationError as e:
+            return utils.create_error_response(400, "Invalid JSON document", str(e))
+        da.date = request.json["date"]
+        da.description = request.json["description"]
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            return self.create_error_response(409, "Integrity Error", "Database problem.")
+        return "",201 #todo
 
-    def delete(self, user, journey, day):
-        pass
+    def delete(self, userid, journeyid, dayid):
+        da = day.query.filter_by(id = dayid).first()
+        if da is None:
+            return utils.create_error_response(404, "Day not found", "Day with the id "+ journeyid +" doesn't exist")
+        db.session.delete(da)
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            return utils.create_error_response(409, "IntegrityError", "IntegrityError")
+        body = ModelBuilder()
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
+
 
 
 
@@ -138,35 +231,68 @@ Images
 
 class ImagesByDay(Resource):
 
-    def get(self, user, journey, day):
+    def get(self, userid, journeyid, dayid):
         body = ModelBuilder(items=[])
-        for im in image.query.filter_by(day_id=day).all():
+        for im in image.query.filter_by(day_id=dayid).all():
             item = ModelBuilder()
             stim = str(im.id) + "." + im.extension
-            item.add_control("self", api.url_for(ImageItem, user=user, journey=journey, day=day, image=stim))
+            item.add_control("self", api.url_for(ImageItem, userid=userid, journeyid=journeyid, dayid=dayid, imageid=stim))
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
-    def post(self, user, journey, day):
-        if not request.json :
-            return "", 415
+    def post(self, userid, journeyid, dayid):
+        if not request.json:
+            return utils.create_error_response(415, "Unsupported media type", "Requests must be JSON")
         try:
-            im = image(extension = request.json["extension"], day_id = day)
+            validate(request.json, utils.image_schema())
+        except ValidationError as e:
+            return utils.create_error_response(400, "Invalid JSON document", str(e))
+        try:
+            im = image(extension = request.json["extension"], day_id = dayid)
             db.session.add(im)
             db.session.commit()
         except KeyError:
-            return "", 400
+            return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
-            return "", 409
-        return "", 201
+            return utils.create_error_response(409, "Integrity Error", "Day with id " + str(dayid) + " doesn't exist.")
+        return "", 201 #todo
 
 class ImageItem(Resource):
 
-    def get(self, user, journey, day, image):
-        pass
+    def get(self, userid, journeyid, dayid, imageid):
+        im = image.query.filter_by(id = imageid).first()
+        stim = str(im.id) + "." + im.extension
+        body = ModelBuilder(image = stim)
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
-    def put(self, user, journey, day, image):
-        pass
 
-    def delete(self, user, journey, day, image):
-        pass
+    def put(self, userid, journeyid, dayid, imageid):
+        if not request.json:
+            return utils.create_error_response(415, "Unsupported media type","Requests must be JSON")
+        im = image.query.filter_by(id = imageid).first()
+        if im is None: 
+            return utils.create_error_response(409, "Image not found", "Image doesn't exist")
+        try:
+            validate(request.json, utils.image_schema())
+        except ValidationError as e:
+            return utils.create_error_response(400, "Invalid JSON document", str(e))
+        im.extension = request.json["extension"]
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            return self.create_error_response(409, "Integrity Error", "Database problem.")
+        return "",201 #todo
+
+    def delete(self, userid, journeyid, dayid, imageid):
+        im = image.query.filter_by(id = dayid).first()
+        if im is None:
+            return utils.create_error_response(404, "Image not found", "Image with the id "+ journeyid +" doesn't exist")
+        db.session.delete(im)
+        try:
+            db.session.commit()
+        except exc.IntegrityError:
+            return utils.create_error_response(409, "IntegrityError", "IntegrityError")
+        body = ModelBuilder()
+        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
+
+

@@ -18,7 +18,7 @@ class user(db.Model):
 
 class journey(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=True)
     title = db.Column(db.String(50), nullable=False)
     user = db.relationship("user", back_populates="journey")
     day = db.relationship("day", back_populates="journey")
@@ -26,7 +26,7 @@ class journey(db.Model):
 
 class day(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
-    journey_id = db.Column(db.Integer,db.ForeignKey("journey.id", ondelete="CASCADE"), nullable=False)
+    journey_id = db.Column(db.Integer,db.ForeignKey("journey.id", ondelete="CASCADE"), nullable=True)
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(10000), nullable=False)
     journey = db.relationship("journey", back_populates="day")
@@ -35,6 +35,6 @@ class day(db.Model):
 
 class image(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
-    day_id = db.Column(db.Integer,db.ForeignKey("day.id",ondelete="CASCADE"), nullable=False)
+    day_id = db.Column(db.Integer,db.ForeignKey("day.id",ondelete="CASCADE"), nullable=True)
     extension = db.Column(db.String(50), nullable=False)
     day = db.relationship("day", back_populates="image")

@@ -1,4 +1,7 @@
+from flask import request, Response, redirect
+import json
 
+MASON = "application/vnd.mason+json"
 
 class MasonBuilder(dict):
     """
@@ -90,28 +93,69 @@ class ModelBuilder(MasonBuilder):
 	        schema=self.product_schema()            
         )
 
+def create_error_response(status_code, title, message=None):
+    resource_url = request.path
+    body = MasonBuilder(resource_url=resource_url)
+    body.add_error(title, message)
+    return Response(json.dumps(body), status_code, mimetype=MASON)
 
-            
+def user_schema():
+    schema = {
+        "type": "object",
+        "required": ["username", "password", "email"]
+    }
+    props = schema["properties"] = {}
+    props["username"] = {
+        "description": "Username of the user",
+        "type": "string"
+    }
+    props["password"] = {
+        "description": "Password of the user",
+        "type": "string"
+    }
+    props["email"] = {
+        "description": "Email of the user",
+        "type": "string"
+    }
+    return schema
 
-    @staticmethod
-    def user_schema():
-        schema = {
-            "type": "object",
-            "required": ["handle", "weight", "price"]
-        }
-        props = schema["properties"] = {}
-        props["handle"] = {
-            "description": "Handle of the product",
-            "type": "string"
-        }
-        props["weight"] = {
-            "description": "Weight of the product",
-            "type": "number"
-        }
 
-        props["price"] = {
-            "description": "Price of the product",
-            "type": "number"
-        }
+def journey_schema():
+    schema = {
+        "type": "object",
+        "required": ["title"]
+    }
+    props = schema["properties"] = {}
+    props["username"] = {
+        "description": "Title of the journey",
+        "type": "string"
+    }
+    return schema
 
-        return schema
+def day_schema():
+    schema = {
+        "type": "object",
+        "required": ["date","description"]
+    }
+    props = schema["properties"] = {}
+    props["date"] = {
+        "description": "Date of the day",
+        "type": "string"
+    }
+    props["description"] = {
+        "description": "Description of the day",
+        "type": "string"
+    }
+    return schema
+
+def image_schema():
+    schema = {
+        "type": "object",
+        "required": ["extension"]
+    }
+    props = schema["properties"] = {}
+    props["extension"] = {
+        "description": "Extension of the image",
+        "type": "string"
+    }
+    return schema
