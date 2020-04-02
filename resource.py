@@ -22,6 +22,8 @@ class UserCollection(Resource):
             item = ModelBuilder(username=us.username)
             item.add_control("self", api.url_for(UserItem, userid=us.id))
             body["items"].append(item)
+            body.add_control_self_user_collection()
+            body.add_control_add_user()
         
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
@@ -40,8 +42,10 @@ class UserCollection(Resource):
         except KeyError:
             return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
-            return utils.create_error_response(409, "Already exists", "User with username " + str(request.json["username"]) + " already exists.")
-        return "", 201 #todo
+            return utils.create_error_response(409, "Already exists", "User with username " + str(request.json["username"]) + " or email " + str(request.json["email"]) + " already exists.")
+        uri = api.url_for(UserItem, userid = us.id)
+        resp = Response(status=201, headers={"Location": uri})
+        return resp
 
 class UserItem(Resource):
 
@@ -69,7 +73,9 @@ class UserItem(Resource):
             db.session.commit()
         except exc.IntegrityError:
             return utils.create_error_response(409, "Already exists", "User with username " + str(request.json["username"]) + " already exists.")
-        return "",201 #todo
+        uri = api.url_for(UserItem, userid = us.id)
+        resp = Response(status=201, headers={"Location": uri})
+        return resp
 
     def delete(self, userid):
         us = user.query.filter_by(id = userid).first()
@@ -112,7 +118,9 @@ class JourneysByUser(Resource):
             return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
             return utils.create_error_response(404, "Integrity Error", "User with id " + str(userid) + " doesn't exist.")
-        return "", 201 #todo
+        uri = api.url_for(JourneyItem, userid = userid, journeyid = jo.id)
+        resp = Response(status=201, headers={"Location": uri})
+        return resp
 
 class JourneyItem(Resource):
 
@@ -138,7 +146,9 @@ class JourneyItem(Resource):
             db.session.commit()
         except exc.IntegrityError:
             return self.create_error_response(409, "Integrity Error", "Database problem.")
-        return "",201 #todo
+        uri = api.url_for(JourneyItem, userid = userid, journeyid = jo.id)
+        resp = Response(status=201, headers={"Location": uri})
+        return resp
 
 
     def delete(self, userid, journeyid):
@@ -183,7 +193,9 @@ class DaysByJourney(Resource):
             return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
             return utils.create_error_response(409, "Integrity Error", "Journey with id " + str(journeyid) + " doesn't exist.")
-        return "", 201 #todo
+        uri = api.url_for(DayItem, userid = userid, journeyid = journeyid, dayid = da.id)
+        resp = Response(status=201, headers={"Location": uri})
+        return resp
 
 class DayItem(Resource):
 
@@ -208,7 +220,9 @@ class DayItem(Resource):
             db.session.commit()
         except exc.IntegrityError:
             return self.create_error_response(409, "Integrity Error", "Database problem.")
-        return "",201 #todo
+        uri = api.url_for(DayItem, userid = userid, journeyid = journeyid, dayid = da.id)
+        resp = Response(status=201, headers={"Location": uri})
+        return resp
 
     def delete(self, userid, journeyid, dayid):
         da = day.query.filter_by(id = dayid).first()
@@ -255,7 +269,9 @@ class ImagesByDay(Resource):
             return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
             return utils.create_error_response(409, "Integrity Error", "Day with id " + str(dayid) + " doesn't exist.")
-        return "", 201 #todo
+        uri = api.url_for(ImageItem, userid = userid, journeyid = journeyid, dayid = dayid, imageid = im.id)
+        resp = Response(status=201, headers={"Location": uri})
+        return resp
 
 class ImageItem(Resource):
 

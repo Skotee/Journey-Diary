@@ -71,16 +71,20 @@ class MasonBuilder(dict):
 
 class ModelBuilder(MasonBuilder):
 
-
-    
-    def add_control_all_products(self):
-
+    def add_control_self_user_collection(self):
         self.add_control(
-            ctrl_name ="products-all",
-            href="/api/products/",
-            method="GET",
+            ctrl_name ="self",
+            href="/api/users/",
+        )
+    
+    def add_control_add_user(self):
+        self.add_control(
+            ctrl_name ="add",
+            href="/api/users/",
+            method="POST",
             encoding="json",
-            title="Get all the products"
+            title="Add user to the Journey Diary API",
+            schema=user_schema()
         )
 
     def add_control_edit_product(self,handle):
