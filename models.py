@@ -13,7 +13,7 @@ class user(db.Model):
     username = db.Column(db.String(15), nullable=False)
     password = db.Column(db.String(15), nullable = False)
     email = db.Column(db.String(50), nullable=False)
-    journey = db.relationship("journey", back_populates="user")
+    journey = db.relationship("journey", back_populates="user", cascade="all, delete-orphan")
 
 
 class journey(db.Model):
@@ -21,7 +21,7 @@ class journey(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"), nullable=True)
     title = db.Column(db.String(50), nullable=False)
     user = db.relationship("user", back_populates="journey")
-    day = db.relationship("day", back_populates="journey")
+    day = db.relationship("day", back_populates="journey", cascade="all, delete-orphan")
 
 
 class day(db.Model): 
@@ -30,7 +30,7 @@ class day(db.Model):
     date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(10000), nullable=False)
     journey = db.relationship("journey", back_populates="day")
-    image = db.relationship("image", back_populates="day")
+    image = db.relationship("image", back_populates="day", cascade="all, delete-orphan")
 
 
 class image(db.Model): 
