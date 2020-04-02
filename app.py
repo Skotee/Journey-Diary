@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from models import user, journey, day, image, db, app
-from resource import UserCollection, UserItem, JourneyCollection, JourneyItem, DayCollection, DayItem, ImageCollection, ImageItem
+from resource import UserCollection, UserItem, JourneysByUser, JourneyItem, DaysByJourney, DayItem, ImagesByDay, ImageItem
 
 api = Api(app)
 
