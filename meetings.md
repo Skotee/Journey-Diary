@@ -15,7 +15,7 @@
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
 ## Meeting 2.
-* **DATE:**
+* **DATE:** 05.03.2020
 * **ASSISTANTS:** Marta Cortes Orduna
 
 ### Minutes
@@ -32,15 +32,20 @@
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
 ## Meeting 3.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE:** 18.03.2020
+* **ASSISTANTS:** Iván Sánchez Milara
 
-### Minutes
+### Minutes 
 *Summary of what was discussed during the meeting*
+-omitting implementation of images
+-small suggestions about Apiary
 
 ### Action points
 *List here the actions points discussed with assistants*
-
+-add all collections to state diagram
+-add entry point for users
+-add link relations and profiles in Apiary
+-mason mediatype should be replaced 
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
