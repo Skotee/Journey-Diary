@@ -98,7 +98,7 @@ class UserItem(Resource):
 Journeys
 '''
 
-class JourneyCollection(Resource):
+class JourneysByUser(Resource):
 
     def get(self,user):
         pass
@@ -133,7 +133,7 @@ class JourneyItem(Resource):
 Days
 '''
 
-class DayCollection(Resource):
+class DaysByJourney(Resource):
 
     def get(self, user, journey):
         pass
@@ -170,7 +170,7 @@ class DayItem(Resource):
 Images
 '''
 
-class ImageCollection(Resource):
+class ImagesByDay(Resource):
 
     def get(self, user, journey, day):
         pass
