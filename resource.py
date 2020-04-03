@@ -22,8 +22,7 @@ class UserCollection(Resource):
             item = ModelBuilder(username=us.username)
             item.add_control("self", api.url_for(UserItem, userid=us.id))
             body["items"].append(item)
-            body.add_control_self_user_collection()
-            body.add_control_add_user()
+        body.add_controls_users_coll()
         
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
@@ -54,6 +53,7 @@ class UserItem(Resource):
         if us is None: 
             return utils.create_error_response(404, "User not found", "User with the id "+ userid +" doesn't exist")
         body = ModelBuilder(username = us.username, email = us.email)
+        body.add_controls_user_item(userid)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def put(self, userid):
@@ -101,6 +101,7 @@ class JourneysByUser(Resource):
             item = ModelBuilder(title=jo.title)
             item.add_control("self", api.url_for(JourneyItem, userid=userid, journeyid=jo.id))
             body["items"].append(item)
+        body.add_controls_journeys_coll(userid)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def post(self, userid):
@@ -129,6 +130,7 @@ class JourneyItem(Resource):
         if jo is None: 
             return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
         body = ModelBuilder(title = jo.title)
+        body.add_controls_journey_item(userid, journeyid)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def put(self, userid, journeyid):
@@ -176,6 +178,8 @@ class DaysByJourney(Resource):
             item = ModelBuilder(date=da.date.strftime("%d-%m-%Y"))
             item.add_control("self", api.url_for(DayItem, userid=userid, journeyid=journeyid, dayid=da.id))
             body["items"].append(item)
+        body.add_controls_days_coll(userid, journeyid)
+
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def post(self, userid, journeyid):
@@ -202,6 +206,8 @@ class DayItem(Resource):
     def get(self, userid, journeyid, dayid):
         da = day.query.filter_by(id = dayid).first()
         body = ModelBuilder(date = da.date.strftime("%d-%m-%Y"), description = da.description)
+        body.add_controls_day_item(userid, journeyid, dayid)
+
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def put(self, userid, journeyid, dayid):
@@ -252,6 +258,7 @@ class ImagesByDay(Resource):
             stim = str(im.id) + "." + im.extension
             item.add_control("self", api.url_for(ImageItem, userid=userid, journeyid=journeyid, dayid=dayid, imageid=stim))
             body["items"].append(item)
+        body.add_controls_images_coll(userid, journeyid, dayid)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def post(self, userid, journeyid, dayid):
@@ -279,6 +286,7 @@ class ImageItem(Resource):
         im = image.query.filter_by(id = imageid).first()
         stim = str(im.id) + "." + im.extension
         body = ModelBuilder(image = stim)
+        body.add_controls_image_item(userid, journeyid, dayid, imageid)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
 
@@ -297,7 +305,9 @@ class ImageItem(Resource):
             db.session.commit()
         except exc.IntegrityError:
             return self.create_error_response(409, "Integrity Error", "Database problem.")
-        return "",201 #todo
+        uri = api.url_for(ImageItem, userid = userid, journeyid = journeyid, dayid = dayid, imageid = im.id)
+        resp = Response(status=201, headers={"Location": uri})
+        return resp
 
     def delete(self, userid, journeyid, dayid, imageid):
         im = image.query.filter_by(id = dayid).first()

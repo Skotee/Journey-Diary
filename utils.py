@@ -71,13 +71,11 @@ class MasonBuilder(dict):
 
 class ModelBuilder(MasonBuilder):
 
-    def add_control_self_user_collection(self):
+    def add_controls_users_coll(self):
         self.add_control(
             ctrl_name ="self",
             href="/api/users/",
         )
-    
-    def add_control_add_user(self):
         self.add_control(
             ctrl_name ="add",
             href="/api/users/",
@@ -86,15 +84,178 @@ class ModelBuilder(MasonBuilder):
             title="Add user to the Journey Diary API",
             schema=user_schema()
         )
-
-    def add_control_edit_product(self,handle):
+    
+    def add_controls_user_item(self, userid):
+        self.add_control(
+            ctrl_name ="self",
+            href="/api/users/" + str(userid) + "/"
+        )
         self.add_control(
             ctrl_name="edit",
-			href="/api/products/" + handle +"/",
+			href="/api/users/" + str(userid) + "/",
 			method="PUT",
 		    encoding="json",
-		    title="Edit a product", 
-	        schema=self.product_schema()            
+		    title="Modify one user to the Journey Diary API", 
+	        schema=user_schema()
+        )
+        self.add_control(
+            ctrl_name="delete",
+			href="/api/users/" + str(userid) + "/",
+			method="DELETE",
+		    title="Delete one user of the Journey Diary API"
+		)
+        self.add_control(
+        	ctrl_name="up",
+            href="/api/users/",
+		    title="Collection of users"
+        )
+        self.add_control(
+        	ctrl_name="journeys-by",
+            href="/api/users/" + str(userid) + "/journeys/",
+		    title="Collection of journeys associated to this user"
+        )
+
+
+    def add_controls_journeys_coll(self, userid):
+        self.add_control(
+            ctrl_name ="self",
+            href="/api/users/" + str(userid) + "/journeys/"
+        )
+        self.add_control(
+            ctrl_name ="add",
+            href="/api/users/" + str(userid) + "/journeys/",
+            method="POST",
+            encoding="json",
+            title="Add Journey to the Journey Diary API",
+            schema=journey_schema()
+        )
+        self.add_control(
+        	ctrl_name="author",
+            href="/api/users/" + str(userid) + "/",
+		    title="User related to this collection of Journeys"
+        )
+
+    def add_controls_journey_item(self, userid, journeyid):
+        self.add_control(
+            ctrl_name ="self",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/"
+        )
+        self.add_control(
+            ctrl_name="edit",
+			href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/",
+			method="PUT",
+		    encoding="json",
+		    title="Modify one journey to the Journey Diary API", 
+	        schema=journey_schema()
+        )
+        self.add_control(
+            ctrl_name="delete",
+			href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/",
+			method="DELETE",
+		    title="Delete one journey of the Journey Diary API"
+		)
+        self.add_control(
+        	ctrl_name="up",
+            href="/api/users/" + str(userid) + "/journeys/" ,
+		    title="Collection of journeys of this journey"
+        )
+        self.add_control(
+        	ctrl_name="days-by",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/",
+		    title="Collection of days associated to this journey"
+        )
+
+    def add_controls_days_coll(self, userid, journeyid):
+        self.add_control(
+            ctrl_name ="self",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/"
+        )
+        self.add_control(
+            ctrl_name ="add",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/",
+            method="POST",
+            encoding="json",
+            title="Add Day to the Journey Diary API",
+            schema=day_schema()
+        )
+        self.add_control(
+        	ctrl_name="journey-of",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/",
+		    title="Journey related to this collection of Days"
+        )
+
+    def add_controls_day_item(self, userid, journeyid, dayid):
+        self.add_control(
+            ctrl_name ="self",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/"
+        )
+        self.add_control(
+            ctrl_name="edit",
+			href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/",
+			method="PUT",
+		    encoding="json",
+		    title="Modify one day to the Journey Diary API", 
+	        schema=day_schema()
+        )
+        self.add_control(
+            ctrl_name="delete",
+			href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/",
+			method="DELETE",
+		    title="Delete one day of the Journey Diary API"
+		)
+        self.add_control(
+        	ctrl_name="up",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" ,
+		    title="Collection of days of this day"
+        )
+        self.add_control(
+        	ctrl_name="images-by",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/images/",
+		    title="Collection of images associated to this day"
+        )
+
+    def add_controls_images_coll(self, userid, journeyid, dayid):
+        self.add_control(
+            ctrl_name ="self",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/images/"
+        )
+        self.add_control(
+            ctrl_name ="add",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/images/",
+            method="POST",
+            encoding="json",
+            title="Add Image to the Journey Diary API",
+            schema=image_schema()
+        )
+        self.add_control(
+        	ctrl_name="day-of",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/",
+		    title="Day related to this collection of Images"
+        )
+
+    def add_controls_image_item(self, userid, journeyid, dayid, imageid):
+        self.add_control(
+            ctrl_name ="self",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/images/" + imageid + "/"
+        )
+        self.add_control(
+            ctrl_name="edit",
+			href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/images/" + imageid + "/",
+			method="PUT",
+		    encoding="json",
+		    title="Modify one image to the Journey Diary API", 
+	        schema=image_schema()
+        )
+        self.add_control(
+            ctrl_name="delete",
+			href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/images/" + imageid + "/",
+			method="DELETE",
+		    title="Delete one image of the Journey Diary API"
+		)
+        self.add_control(
+        	ctrl_name="up",
+            href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) + "/days/" + str(dayid) + "/images/",
+		    title="Collection of images of this image"
         )
 
 def create_error_response(status_code, title, message=None):
