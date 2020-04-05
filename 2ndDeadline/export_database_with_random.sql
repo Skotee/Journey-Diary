@@ -23,14 +23,21 @@
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
+CREATE TABLE `user`
+(
   `ID` int NOT NULL AUTO_INCREMENT,
-  `USERNAME` varchar(15) NOT NULL,
-  `PASSWORD` varchar(15) NOT NULL,
-  `EMAIL` varchar(50) NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `USERNAME_UNIQUE` (`USERNAME`),
-  UNIQUE KEY `EMAIL_UNIQUE` (`EMAIL`)
+  `USERNAME` varchar
+(15) NOT NULL,
+  `PASSWORD` varchar
+(15) NOT NULL,
+  `EMAIL` varchar
+(50) NOT NULL,
+  PRIMARY KEY
+(`ID`),
+  UNIQUE KEY `USERNAME_UNIQUE`
+(`USERNAME`),
+  UNIQUE KEY `EMAIL_UNIQUE`
+(`EMAIL`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,13 +49,20 @@ CREATE TABLE `user` (
 DROP TABLE IF EXISTS `journey`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `journey` (
+CREATE TABLE `journey`
+(
   `ID` int NOT NULL AUTO_INCREMENT,
   `USER_ID` int NOT NULL,
-  `TITLE` varchar(50) NOT NULL,
-  PRIMARY KEY (`ID`),
-  CONSTRAINT `FK_JOURNEY` FOREIGN KEY (`USER_ID`) REFERENCES `user` (`ID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `TITLE` varchar
+(50) NOT NULL,
+  PRIMARY KEY
+(`ID`),
+  CONSTRAINT `FK_JOURNEY` FOREIGN KEY
+(`USER_ID`) REFERENCES `user`
+(`ID`) ON
+DELETE CASCADE
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
@@ -60,14 +74,21 @@ CREATE TABLE `journey` (
 DROP TABLE IF EXISTS `day`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `day` (
+CREATE TABLE `day`
+(
   `ID` int NOT NULL AUTO_INCREMENT,
   `JOURNEY_ID` int NOT NULL,
   `DATE` date NOT NULL,
-  `DESCRIPTION` varchar(10000) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
-  CONSTRAINT `FK_DAY` FOREIGN KEY (`JOURNEY_ID`) REFERENCES `journey` (`ID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `DESCRIPTION` varchar
+(10000) DEFAULT NULL,
+  PRIMARY KEY
+(`ID`),
+  CONSTRAINT `FK_DAY` FOREIGN KEY
+(`JOURNEY_ID`) REFERENCES `journey`
+(`ID`) ON
+DELETE CASCADE
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
@@ -79,14 +100,22 @@ CREATE TABLE `day` (
 DROP TABLE IF EXISTS `image`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `image` (
+CREATE TABLE `image`
+(
   `ID` int NOT NULL AUTO_INCREMENT,
   `DAY_ID` int NOT NULL,
-  `EXTENSION` varchar(45) NOT NULL,
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `ID_UNIQUE` (`ID`),
-  CONSTRAINT `FK_IMAGE` FOREIGN KEY (`DAY_ID`) REFERENCES `day` (`ID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `EXTENSION` varchar
+(45) NOT NULL,
+  PRIMARY KEY
+(`ID`),
+  UNIQUE KEY `ID_UNIQUE`
+(`ID`),
+  CONSTRAINT `FK_IMAGE` FOREIGN KEY
+(`DAY_ID`) REFERENCES `day`
+(`ID`) ON
+DELETE CASCADE
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
