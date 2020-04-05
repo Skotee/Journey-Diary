@@ -32,5 +32,8 @@ Type in command line this command: pytest in the folder where db_test.py is. db_
 
 <h2> How to setup (e.g. modifying any configuration files) and run Journey Diary's RESTful API. </h2>
 
+Use the command flask run in the terminal. 
+
 <h2>The URL to access your API (usually nameofapplication/api/version/)</h2>
 
+http://127.0.0.1:5000/api/
