@@ -97,6 +97,9 @@ class JourneysByUser(Resource):
 
     def get(self, userid):
         body = ModelBuilder(items=[])
+        us = user.query.filter_by(id = userid).first()
+        if us is None:
+            return utils.create_error_response(404, "User not found", "User with the id "+ userid +" doesn't exist")
         for jo in journey.query.filter_by(user_id=userid).all():
             item = ModelBuilder(title=jo.title)
             item.add_control("self", api.url_for(JourneyItem, userid=userid, journeyid=jo.id))
@@ -111,6 +114,9 @@ class JourneysByUser(Resource):
             validate(request.json, utils.journey_schema())
         except ValidationError as e:
             return utils.create_error_response(400, "Invalid JSON document", str(e))
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None:
+            return utils.create_error_response(404, "User not found", "User with the id "+ userid +" doesn't exist")
         try:
             jo = journey(title=request.json["title"], user_id = userid)
             db.session.add(jo)
@@ -129,6 +135,9 @@ class JourneyItem(Resource):
         jo = journey.query.filter_by(id = journeyid).first()
         if jo is None: 
             return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist us.id = "+str(us.id)+"   userid = "+str(userid))
         body = ModelBuilder(title = jo.title)
         body.add_controls_journey_item(userid, journeyid)
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
@@ -138,6 +147,9 @@ class JourneyItem(Resource):
             return utils.create_error_response(415, "Unsupported media type","Requests must be JSON")
         jo = journey.query.filter_by(id = journeyid).first()
         if jo is None: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
             return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
         try:
             validate(request.json, utils.journey_schema())
@@ -155,8 +167,11 @@ class JourneyItem(Resource):
 
     def delete(self, userid, journeyid):
         jo = journey.query.filter_by(id = journeyid).first()
-        if jo is None:
-            return utils.create_error_response(404, "Journey not found", "Journey with the id "+ journeyid +" doesn't exist")
+        if jo is None: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
         db.session.delete(jo)
         try:
             db.session.commit()
@@ -173,6 +188,12 @@ Days
 class DaysByJourney(Resource):
 
     def get(self, userid, journeyid):
+        jo = journey.query.filter_by(id = journeyid).first()
+        if jo is None: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
         body = ModelBuilder(items=[])
         for da in day.query.filter_by(journey_id=journeyid).all():
             item = ModelBuilder(date=da.date.strftime("%d-%m-%Y"))
@@ -189,6 +210,12 @@ class DaysByJourney(Resource):
             validate(request.json, utils.day_schema())
         except ValidationError as e:
             return utils.create_error_response(400, "Invalid JSON document", str(e))
+        jo = journey.query.filter_by(id = journeyid).first()
+        if jo is None: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
         try:
             da = day(date=request.json["date"], description = request.json["description"], journey_id = journeyid)
             db.session.add(da)
@@ -205,6 +232,15 @@ class DayItem(Resource):
 
     def get(self, userid, journeyid, dayid):
         da = day.query.filter_by(id = dayid).first()
+        if da is None:
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
+        jo = journey.query.filter_by(id = da.journey_id).first()
+        if jo is None or str(jo.id) != journeyid: 
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
+        
         body = ModelBuilder(date = da.date.strftime("%d-%m-%Y"), description = da.description)
         body.add_controls_day_item(userid, journeyid, dayid)
 
@@ -214,8 +250,14 @@ class DayItem(Resource):
         if not request.json:
             return utils.create_error_response(415, "Unsupported media type","Requests must be JSON")
         da = day.query.filter_by(id = dayid).first()
-        if da is None: 
-            return utils.create_error_response(409, "Day not found", "Day doesn't exist")
+        if da is None:
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
+        jo = journey.query.filter_by(id = da.journey_id).first()
+        if jo is None or str(jo.id) != journeyid: 
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
         try:
             validate(request.json, utils.day_schema())
         except ValidationError as e:
@@ -233,7 +275,13 @@ class DayItem(Resource):
     def delete(self, userid, journeyid, dayid):
         da = day.query.filter_by(id = dayid).first()
         if da is None:
-            return utils.create_error_response(404, "Day not found", "Day with the id "+ journeyid +" doesn't exist")
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
+        jo = journey.query.filter_by(id = da.journey_id).first()
+        if jo is None or str(jo.id) != journeyid: 
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Day not found", "Day doesn't exist")
         db.session.delete(da)
         try:
             db.session.commit()
@@ -244,7 +292,6 @@ class DayItem(Resource):
 
 
 
-
 '''
 Images
 '''
@@ -252,6 +299,15 @@ Images
 class ImagesByDay(Resource):
 
     def get(self, userid, journeyid, dayid):
+        da = day.query.filter_by(id = dayid).first()
+        if da is None:
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        jo = journey.query.filter_by(id = da.journey_id).first()
+        if jo is None or str(jo.id) != journeyid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
         body = ModelBuilder(items=[])
         for im in image.query.filter_by(day_id=dayid).all():
             item = ModelBuilder()
@@ -262,6 +318,15 @@ class ImagesByDay(Resource):
         return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
 
     def post(self, userid, journeyid, dayid):
+        da = day.query.filter_by(id = dayid).first()
+        if da is None:
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        jo = journey.query.filter_by(id = da.journey_id).first()
+        if jo is None or str(jo.id) != journeyid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
         if not request.json:
             return utils.create_error_response(415, "Unsupported media type", "Requests must be JSON")
         try:
@@ -284,6 +349,17 @@ class ImageItem(Resource):
 
     def get(self, userid, journeyid, dayid, imageid):
         im = image.query.filter_by(id = imageid).first()
+        if im is None:
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        da = day.query.filter_by(id = im.day_id).first()
+        if da is None or str(da.id) != dayid:
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        jo = journey.query.filter_by(id = da.journey_id).first()
+        if jo is None or str(jo.id) != journeyid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
         stim = str(im.id) + "." + im.extension
         body = ModelBuilder(image = stim)
         body.add_controls_image_item(userid, journeyid, dayid, imageid)
@@ -294,8 +370,17 @@ class ImageItem(Resource):
         if not request.json:
             return utils.create_error_response(415, "Unsupported media type","Requests must be JSON")
         im = image.query.filter_by(id = imageid).first()
-        if im is None: 
-            return utils.create_error_response(409, "Image not found", "Image doesn't exist")
+        if im is None:
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        da = day.query.filter_by(id = im.day_id).first()
+        if da is None or str(da.id) != dayid:
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        jo = journey.query.filter_by(id = da.journey_id).first()
+        if jo is None or str(jo.id) != journeyid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
         try:
             validate(request.json, utils.image_schema())
         except ValidationError as e:
@@ -310,9 +395,18 @@ class ImageItem(Resource):
         return resp
 
     def delete(self, userid, journeyid, dayid, imageid):
-        im = image.query.filter_by(id = dayid).first()
+        im = image.query.filter_by(id = imageid).first()
         if im is None:
-            return utils.create_error_response(404, "Image not found", "Image with the id "+ journeyid +" doesn't exist")
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        da = day.query.filter_by(id = im.day_id).first()
+        if da is None or str(da.id) != dayid:
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        jo = journey.query.filter_by(id = da.journey_id).first()
+        if jo is None or str(jo.id) != journeyid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
+        us = user.query.filter_by(id = jo.user_id).first()
+        if us is None or str(us.id) != userid: 
+            return utils.create_error_response(404, "Image not found", "Image doesn't exist")
         db.session.delete(im)
         try:
             db.session.commit()
