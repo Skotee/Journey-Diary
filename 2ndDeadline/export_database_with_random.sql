@@ -34,16 +34,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Roman','user','r@op.pl'),(2,'Remi','user','remi@wp.pl');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 --
 -- Table structure for table `journey`
@@ -61,15 +51,7 @@ CREATE TABLE `journey` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `journey`
---
 
-LOCK TABLES `journey` WRITE;
-/*!40000 ALTER TABLE `journey` DISABLE KEYS */;
-INSERT INTO `journey` VALUES (1,1,'Egypt');
-/*!40000 ALTER TABLE `journey` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `day`
@@ -88,15 +70,7 @@ CREATE TABLE `day` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `day`
---
 
-LOCK TABLES `day` WRITE;
-/*!40000 ALTER TABLE `day` DISABLE KEYS */;
-INSERT INTO `day` VALUES (1,1,'2020-09-09','That was wery nice trip ');
-/*!40000 ALTER TABLE `day` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `image`
@@ -115,13 +89,33 @@ CREATE TABLE `image` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
 --
--- Dumping data for table `image`
+-- Dumping data
 --
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (NULL,'Roman','user','r@op.pl'),(NULL,'Remi','user','remi@wp.pl');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `journey` WRITE;
+/*!40000 ALTER TABLE `journey` DISABLE KEYS */;
+INSERT INTO `journey` VALUES (NULL,1,'Egypt'),(NULL,2,'France'),(NULL,1,'Russia'),(NULL,2,'South Africa');
+/*!40000 ALTER TABLE `journey` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `day` WRITE;
+/*!40000 ALTER TABLE `day` DISABLE KEYS */;
+INSERT INTO `day` VALUES (NULL,1,'2019-01-09','I liked my day in Egypt'),(NULL,2,'2019-09-20','Today I saw tour eiffel !'), (NULL,2,'2019-09-25','Chill day in Marseille'),
+(NULL,3,'2017-03-10','Discovering Moscow'), (NULL,4,'2015-02-01','Johannesburg is amazing');
+/*!40000 ALTER TABLE `day` ENABLE KEYS */;
+UNLOCK TABLES;
 
 LOCK TABLES `image` WRITE;
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
-INSERT INTO `image` VALUES (1,1,'jpg');
+INSERT INTO `image` VALUES (NULL,1,'png'),(NULL,2,'jpg'),(NULL,3,'jpg'),(NULL,2,'png'),(NULL,4,'jpg'),(NULL,6,'jpg');
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 UNLOCK TABLES;
 
