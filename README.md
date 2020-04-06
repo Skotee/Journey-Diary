@@ -36,4 +36,4 @@ Use the command flask run in the terminal.
 
 <h2>The URL to access your API (usually nameofapplication/api/version/)</h2>
 
-http://127.0.0.1:5000/api/
+http://127.0.0.1:5000/api/ (the entry point is http://127.0.0.1:5000/api/users/)
