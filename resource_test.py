@@ -41,9 +41,9 @@ def _populate_db():
     for i in range(1, 4):
         s = user(
             id=i,
-            username="testuser",
+            username="testuser"+str(i),
             password="testpassword", 
-            email="testemail"
+            email="testemail"+str(i)
         )
         db.session.add(s)
     db.session.commit()
@@ -86,7 +86,7 @@ def _check_control_delete_method(ctrl, client, obj):
     method = obj["@controls"][ctrl]["method"].lower()
     assert method == "delete"
     resp = client.delete(href)
-    assert resp.status_code == 200 #amodifier
+    assert resp.status_code == 204
     
 def _check_control_put_method(ctrl, client, obj):
     """
@@ -157,7 +157,6 @@ class TestUserCollection(object):
         for item in body["items"]:
             _check_control_get_method("self", client, item)
             assert "username" in item
-            assert "email" in item
 
 
     def test_post(self, client):
@@ -210,8 +209,8 @@ class TestUserItem(object):
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        assert body["username"] == "testuser"
-        assert body["email"] == "testemail"
+        assert body["username"] == "testuser1"
+        assert body["email"] == "testemail1"
         _check_control_delete_method("delete", client, body)
         resp = client.get(self.INVALID_URL)
         assert resp.status_code == 404
@@ -236,13 +235,13 @@ class TestUserItem(object):
         # test with another id
         valid["username"] = "extrauser"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 409
+        assert resp.status_code == 201
  
              
         # test with valid (only change id)
-        valid["id"] = 1
+        valid["username"] = "testuser2"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 201
+        assert resp.status_code == 409
            
         # remove field for 400
         valid.pop("username")
@@ -264,7 +263,7 @@ class TestUserItem(object):
         """
         
         resp = client.delete(self.RESOURCE_URL)
-        assert resp.status_code == 200 #amodifier
+        assert resp.status_code == 204
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 404
         resp = client.delete(self.INVALID_URL)
