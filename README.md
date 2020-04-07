@@ -24,13 +24,16 @@ We used a MySQL Workbench. The following website is explaining how to setup MySQ
 
 <h2>Instructions on how to setup and populate the database </h2>
 				
-Import .sql file with sql script which contains data for each column for each table in database.
+Import .sql file with sql script which contains data for each column for each table in a database.
 
 <h2> Instruction on how to run the tests of your database </h2>
 
 Type in command line this command: pytest in the folder where db_test.py is. db_test and app should be in the same folder. Test will run immediately.
 
 <h2> How to setup (e.g. modifying any configuration files) and run Journey Diary's RESTful API. </h2>
+
+You have to link the app to the database in which you ran the script .sql by modifying the configuration file **config.py**.
+This file contains 4 constants USERNAME, PASSWORD, ADDRESS and DATABASE, modify them to fit with your database.
 
 Use the command flask run in the terminal. 
 
