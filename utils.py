@@ -311,7 +311,7 @@ def journey_schema():
         "required": ["title"]
     }
     props = schema["properties"] = {}
-    props["username"] = {
+    props["title"] = {
         "description": "Title of the journey",
         "type": "string"
     }
