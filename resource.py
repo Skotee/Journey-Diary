@@ -87,7 +87,7 @@ class UserItem(Resource):
         except exc.IntegrityError:
             return utils.create_error_response(409, "IntegrityError", "IntegrityError")
         body = ModelBuilder()
-        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
+        return Response(json.dumps(body), 204, mimetype="application/vnd.mason+json")
 
 '''
 Journeys
@@ -178,7 +178,7 @@ class JourneyItem(Resource):
         except exc.IntegrityError:
             return utils.create_error_response(409, "IntegrityError", "IntegrityError")
         body = ModelBuilder()
-        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
+        return Response(json.dumps(body), 204, mimetype="application/vnd.mason+json")
 
 
 '''
@@ -288,7 +288,7 @@ class DayItem(Resource):
         except exc.IntegrityError:
             return utils.create_error_response(409, "IntegrityError", "IntegrityError")
         body = ModelBuilder()
-        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
+        return Response(json.dumps(body), 204, mimetype="application/vnd.mason+json")
 
 
 
@@ -413,6 +413,6 @@ class ImageItem(Resource):
         except exc.IntegrityError:
             return utils.create_error_response(409, "IntegrityError", "IntegrityError")
         body = ModelBuilder()
-        return Response(json.dumps(body), 200, mimetype="application/vnd.mason+json")
+        return Response(json.dumps(body), 204, mimetype="application/vnd.mason+json")
 
 
