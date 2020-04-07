@@ -135,7 +135,7 @@ def _check_control_post_method(ctrl, client, obj):
 
 class TestUserCollection(object):
     """
-    This class implements tests for each HTTP method in sensor collection
+    This class implements tests for each HTTP method in user collection
     resource. 
     """
     
@@ -172,13 +172,11 @@ class TestUserCollection(object):
         """
         
         valid = _get_user_json()
-        
-        # test with wrong content type
-        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
-        assert resp.status_code == 415
-        
+
         # test with valid and see that it exists afterward
         resp = client.post(self.RESOURCE_URL, json=valid)
+        body = json.loads(client.get(self.RESOURCE_URL).data)
+        id = body["items"][-1]["id"]
         assert resp.status_code == 201
         assert resp.headers["Location"].endswith(self.RESOURCE_URL + str(id) + "/")
         resp = client.get(resp.headers["Location"])
@@ -188,7 +186,10 @@ class TestUserCollection(object):
         assert body["username"] == "extrauser"
         assert body["password"] == "extrapassword"
         assert body["email"] == "extraemail"
-        
+
+        # test with wrong content type
+        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
+        assert resp.status_code == 415
         
         # send same data again for 409
         resp = client.post(self.RESOURCE_URL, json=valid)
@@ -231,9 +232,9 @@ class TestUserItem(object):
 
     def test_put(self, client):
         """
-        Tests the PUT method. Checks all of the possible erroe codes, and also
+        Tests the PUT method. Checks all of the possible errors codes, and also
         checks that a valid request receives a 204 response. Also tests that
-        when name is changed, the sensor can be found from a its new URI. 
+        when name is changed, the user can be found from a its new URI. 
         """
         
         valid = _get_user_json()
@@ -270,7 +271,7 @@ class TestUserItem(object):
         """
         
         resp = client.delete(self.RESOURCE_URL)
-        assert resp.status_code == 200
+        assert resp.status_code == 204
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 404
         resp = client.delete(self.INVALID_URL)
