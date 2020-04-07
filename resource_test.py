@@ -86,7 +86,7 @@ def _check_control_delete_method(ctrl, client, obj):
     method = obj["@controls"][ctrl]["method"].lower()
     assert method == "delete"
     resp = client.delete(href)
-    assert resp.status_code == 204
+    assert resp.status_code == 200 #amodifier
     
 def _check_control_put_method(ctrl, client, obj):
     """
@@ -152,15 +152,11 @@ class TestUserCollection(object):
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        _check_namespace(client, body)
-        _check_control_post_method("journeydiary:add-user", client, body)
+        _check_control_post_method("add", client, body)
         assert len(body["items"]) == 3
         for item in body["items"]:
             _check_control_get_method("self", client, item)
-            _check_control_get_method("profile", client, item)
-            assert "id" in item
             assert "username" in item
-            assert "password" in item
             assert "email" in item
 
 
@@ -176,15 +172,11 @@ class TestUserCollection(object):
         # test with valid and see that it exists afterward
         resp = client.post(self.RESOURCE_URL, json=valid)
         body = json.loads(client.get(self.RESOURCE_URL).data)
-        id = body["items"][-1]["id"]
         assert resp.status_code == 201
-        assert resp.headers["Location"].endswith(self.RESOURCE_URL + str(id) + "/")
         resp = client.get(resp.headers["Location"])
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        assert body["id"] == 1
         assert body["username"] == "extrauser"
-        assert body["password"] == "extrapassword"
         assert body["email"] == "extraemail"
 
         # test with wrong content type
@@ -218,15 +210,9 @@ class TestUserItem(object):
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        assert body["id"] == 1
         assert body["username"] == "testuser"
-        assert body["password"] == "testpassword"
         assert body["email"] == "testemail"
-        _check_namespace(client, body)
-        _check_control_get_method("profile", client, body)
-        _check_control_get_method("collection", client, body)
-        _check_control_put_method("edit", client, body)
-        _check_control_delete_method("journeydiary:delete", client, body)
+        _check_control_delete_method("delete", client, body)
         resp = client.get(self.INVALID_URL)
         assert resp.status_code == 404
 
@@ -239,18 +225,25 @@ class TestUserItem(object):
         
         valid = _get_user_json()
         
+        
         # test with wrong content type
         resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
         assert resp.status_code == 415
         
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
+
+        # test with another id
+        valid["username"] = "extrauser"
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 409
+ 
              
         # test with valid (only change id)
         valid["id"] = 1
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 201
-        
+           
         # remove field for 400
         valid.pop("username")
         resp = client.put(self.RESOURCE_URL, json=valid)
@@ -271,11 +264,8 @@ class TestUserItem(object):
         """
         
         resp = client.delete(self.RESOURCE_URL)
-        assert resp.status_code == 204
+        assert resp.status_code == 200 #amodifier
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 404
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
-        
-        
-        
