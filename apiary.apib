@@ -176,10 +176,39 @@ object containing the username, the email and the password.
                 "email": "newmail@mail.com",
                 "password":"newpassword123"
             }
-            
+
++ Response 415 (application/vnd.mason+json)
+{
+    "resource_url": "/api/users/",
+    "@error": {
+        "@message": "Unsupported media type",
+        "@messages": [
+            "Requests must be JSON"
+        ]
+    }
+}
+
++ Response 409
+{
+    "resource_url": "/api/users/",
+    "@error": {
+        "@message": "Already exists",
+        "@messages": [
+            "User with username or email already exists."
+        ]
+    }
+}
+
 + Response 400
-    Returned if a Username already taken
-    + Body
+{
+    "resource_url": "/api/users/",
+    "@error": {
+        "@message": "Invalid JSON document",
+        "@messages": [
+            "'username' is a required property\n\nFailed validating 'required' in schema:\n    {'properties': {'email': {'description': 'Email of the user',\n                              'type': 'string'},\n                    'password': {'description': 'Password of the user',\n                                 'type': 'string'},\n                    'username': {'description': 'Username of the user',\n                                 'type': 'string'}},\n     'required': ['username', 'password', 'email'],\n     'type': 'object'}\n\nOn instance:\n    {'email': 'teste', 'password': 'testp', 'userdname': 'testu'}"
+        ]
+    }
+}
 
 
 ## User Item [/users/{user}]
@@ -237,8 +266,15 @@ You can get the informations about one User in the API.
             }
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to access one User that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/32/",
+        "@error": {
+            "@message": "User not found",
+            "@messages": [
+                "User with the id 32 doesn't exist"
+            ]
+        }
+    }
 
 ### Modify informations about one User [PUT]
 You can modify the informations about one User in the API. It takes a JSON
@@ -251,7 +287,7 @@ object containing the username, the email and the password.
             "password":"newpassword123"
         }
 
-+ Response 200 (application/vnd.mason+json)
++ Response 201 (application/vnd.mason+json)
 
             {
                 "@controls": {
@@ -303,19 +339,67 @@ object containing the username, the email and the password.
 
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to modify one User that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/32/",
+        "@error": {
+            "@message": "User not found",
+            "@messages": [
+                "User with the id 32 doesn't exist"
+            ]
+        }
+    }
+
++ Response 415 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/32/",
+        "@error": {
+            "@message": "Unsupported media type",
+            "@messages": [
+                "Requests must be JSON"
+            ]
+        }
+    }
+
++ Response 409 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/",
+        "@error": {
+            "@message": "Already exists",
+            "@messages": [
+                "User with username or email already exists."
+            ]
+        }
+    }
+
++ Response 400 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/",
+        "@error": {
+            "@message": "Invalid JSON document",
+            "@messages": [
+                "'username' is a required property\n\nFailed validating 'required' in schema:\n    {'properties': {'email': {'description': 'Email of the user',\n                              'type': 'string'},\n                    'password': {'description': 'Password of the user',\n                                 'type': 'string'},\n                    'username': {'description': 'Username of the user',\n                                 'type': 'string'}},\n     'required': ['username', 'password', 'email'],\n     'type': 'object'}\n\nOn instance:\n    {'email': 'teste', 'password': 'testp', 'userdname': 'testu'}"
+            ]
+        }
+    }
+
 
 ### Delete one User [DELETE]
 You can delete one User in the API.
     
 
-+ Response 200 (application/vnd.mason+json)
++ Response 204 (application/vnd.mason+json)
 
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to delete one User that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/32/",
+        "@error": {
+            "@message": "User not found",
+            "@messages": [
+                "User with the id 32 doesn't exist"
+            ]
+        }
+    }
 
 # Group Journey
 
@@ -400,6 +484,18 @@ You can list all the Users of the database linked to one User.
              }
         ]
    }
+   
+   
++ Response 404 (application/vnd.mason+json)
+   {
+        "resource_url": "/api/users/32/journeys/",
+        "@error": {
+            "@message": "User not found",
+            "@messages": [
+                "User with the id 32 doesn't exist"
+            ]
+        }
+    }
 
 ### Create a New Journey [POST]
 You can create a new Journey in the API. It takes a JSON
@@ -454,10 +550,39 @@ object containing the title and the description.
             }
         
             
-        
++ Response 404 (application/vnd.mason+json)
+   {
+        "resource_url": "/api/users/32/journeys/",
+        "@error": {
+            "@message": "User not found",
+            "@messages": [
+                "User with the id 32 doesn't exist"
+            ]
+        }
+    }        
+
++ Response 415 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/32/journeys/",
+        "@error": {
+            "@message": "Unsupported media type",
+            "@messages": [
+                "Requests must be JSON"
+            ]
+        }
+    }
 
 + Response 400 (application/vnd.mason+json)
-- Journey ID already taken
+    {
+        "resource_url": "/api/users/1/journeys/",
+        "@error": {
+            "@message": "Invalid JSON document",
+            "@messages": [
+                "'title' is a required property\n\nFailed validating 'required' in schema:\n    {'properties': {'title': {'description': 'Title of the journey',\n                              'type': 'string'}},\n     'required': ['title'],\n     'type': 'object'}\n\nOn instance:\n    {'titled': 'test of title'}"
+            ]
+        }
+    }
+
  
 ## Journey Item [/users/{user}/journeys/{journey}/]
 + Parameters
@@ -511,8 +636,15 @@ You can get the informations about one Journey in the API.
             }
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to access one Journey that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/2/journeys/1/",
+        "@error": {
+            "@message": "Journey not found",
+            "@messages": [
+                "Journey doesn't exist"
+            ]
+        }
+    }
 
 ### Modify informations about one Journey [PUT]
 You can modify the informations about one Journey in the API. It takes a JSON object containing a title.
@@ -523,7 +655,7 @@ You can modify the informations about one Journey in the API. It takes a JSON ob
             "title": "newTitle"
         }
 
-+ Response 200 (application/vnd.mason+json)
++ Response 201 (application/vnd.mason+json)
 
     
             {
@@ -567,19 +699,55 @@ You can modify the informations about one Journey in the API. It takes a JSON ob
             }
 
 
++ Response 415 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/2/journeys/1/",
+        "@error": {
+            "@message": "Unsupported media type",
+            "@messages": [
+                "Requests must be JSON"
+            ]
+        }
+    }
+
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to modify one journey that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/2/journeys/1/",
+        "@error": {
+            "@message": "Journey not found",
+            "@messages": [
+                "Journey doesn't exist"
+            ]
+        }
+    }
+
++ Response 400 (application/vnd.mason+json)
+{
+    "resource_url": "/api/users/1/journeys/1/",
+    "@error": {
+        "@message": "Invalid JSON document",
+        "@messages": [
+            "'title' is a required property\n\nFailed validating 'required' in schema:\n    {'properties': {'title': {'description': 'Title of the journey',\n                              'type': 'string'}},\n     'required': ['title'],\n     'type': 'object'}\n\nOn instance:\n    {'titled': 'test of title'}"
+        ]
+    }
+}
 
 ### Delete one Journey [DELETE]
 You can delete one Journey in the API.
 
-+ Response 200 (application/vnd.mason+json)
++ Response 204 (application/vnd.mason+json)
 
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to delete one journey that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/2/journeys/1/",
+        "@error": {
+            "@message": "Journey not found",
+            "@messages": [
+                "Journey doesn't exist"
+            ]
+        }
+    }
 
 
 
@@ -647,7 +815,7 @@ You can list all the Days of the database linked to one Journey.
     },
       "items":[
          {
-            "date": "2020-03-15 18:30:00",
+            "date": "2020-03-15",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/1"
@@ -655,7 +823,7 @@ You can list all the Days of the database linked to one Journey.
             }
          },
          {
-            "date": "2020-03-16 18:30:00",
+            "date": "2020-03-16",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/2"
@@ -663,7 +831,7 @@ You can list all the Days of the database linked to one Journey.
             }
          },
          {
-            "date": "2020-03-17 18:30:00",
+            "date": "2020-03-17",
             "@controls":{
                "self":{
                   "href":"/api/users/1/journeys/1/days/3"
@@ -672,6 +840,17 @@ You can list all the Days of the database linked to one Journey.
          }
       ]
    }
+
++ Response 404 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/2/journeys/1/days/",
+        "@error": {
+            "@message": "Journey not found",
+            "@messages": [
+                "Journey doesn't exist"
+            ]
+        }
+    }
 
 ### Create a New Day [POST]
 You can create a new Day in the API. It takes a JSON
@@ -735,8 +914,39 @@ object containing the date and the description.
             
         
 
++ Response 404 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/2/journeys/1/days/",
+        "@error": {
+            "@message": "Journey not found",
+            "@messages": [
+                "Journey doesn't exist"
+            ]
+        }
+    }
+
+
++ Response 415 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/2/journeys/1/days/",
+        "@error": {
+            "@message": "Unsupported media type",
+            "@messages": [
+                "Requests must be JSON"
+            ]
+        }
+    }
+
 + Response 400 (application/vnd.mason+json)
-- Journey ID already taken
+    {
+        "resource_url": "/api/users/1/journeys/1/days/",
+        "@error": {
+            "@message": "Invalid JSON document",
+            "@messages": [
+                "'description' is a required property\n\nFailed validating 'required' in schema:\n    {'properties': {'date': {'description': 'Date of the day',\n                             'type': 'string'},\n                    'description': {'description': 'Description of the day',\n                                    'type': 'string'}},\n     'required': ['date', 'description'],\n     'type': 'object'}\n\nOn instance:\n    {'date': '2020-03-15 18:30:00', 'descripstion': 'test description'}"
+            ]
+        }
+    }
 
 
 ## Day Item [/api/users/{user}/journeys/{journey}/days/{day}/]
@@ -798,8 +1008,15 @@ object containing the date and the description.
         }
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to access one User that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/1/journeys/2/days/1/",
+        "@error": {
+            "@message": "Day not found",
+            "@messages": [
+                "Day doesn't exist"
+            ]
+        }
+    }
 
 ### Modify informations about one Day [PUT]
 You can modify the informations about one Day in the API. It takes a JSON
@@ -807,7 +1024,7 @@ object containing the date and a description.
 + Request (application/json)
 
         {
-            "date": "2020-03-15 18:30:00",
+            "date": "2020-03-15",
             "description": "Description new"
         }
 
@@ -859,22 +1076,57 @@ object containing the date and a description.
             "date": "2020-03-15 18:30:00",
             "description": "Description new"
         }
-
+        
++ Response 415 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/2/journeys/1/days/1/",
+        "@error": {
+            "@message": "Unsupported media type",
+            "@messages": [
+                "Requests must be JSON"
+            ]
+        }
+    }
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to modify one User that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/1/journeys/2/days/1/",
+        "@error": {
+            "@message": "Day not found",
+            "@messages": [
+                "Day doesn't exist"
+            ]
+        }
+    }
+    
++ Response 400 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/1/journeys/1/days/1/",
+        "@error": {
+            "@message": "Invalid JSON document",
+            "@messages": [
+                "'description' is a required property\n\nFailed validating 'required' in schema:\n    {'properties': {'date': {'description': 'Date of the day',\n                             'type': 'string'},\n                    'description': {'description': 'Description of the day',\n                                    'type': 'string'}},\n     'required': ['date', 'description'],\n     'type': 'object'}\n\nOn instance:\n    {'date': '2020-03-15 18:30:00', 'descripstion': 'test description'}"
+            ]
+        }
+    }
 
 ### Delete one Day [DELETE]
 You can delete one Day in the API.
     
 
-+ Response 200 (application/vnd.mason+json)
++ Response 204 (application/vnd.mason+json)
 
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to delete one Day that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/1/journeys/2/days/1/",
+        "@error": {
+            "@message": "Day not found",
+            "@messages": [
+                "Day doesn't exist"
+            ]
+        }
+    }
 
 # Group Image
 ## Profile
@@ -955,6 +1207,17 @@ You can list all the Images of the database linked to one Day.
         ]
    }
 
++ Response 404 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/1/journeys/2/days/1/images/",
+        "@error": {
+            "@message": "Day not found",
+            "@messages": [
+                "Day doesn't exist"
+            ]
+        }
+    }
+
 ### Create a New Image [POST]
 You can create a new Image in the API. It takes a JSON
 object containing the extension of the image.
@@ -981,12 +1244,41 @@ object containing the extension of the image.
                 }
             }
         }
-            
-        
 
++ Response 404 (application/vnd.mason+json)
+    
+    {
+        "resource_url": "/api/users/1/journeys/2/days/1/images/",
+        "@error": {
+            "@message": "Day not found",
+            "@messages": [
+                "Day doesn't exist"
+            ]
+        }
+    }
+    
 + Response 400 (application/vnd.mason+json)
-- Journey ID already taken
+    {
+        "resource_url": "/api/users/1/journeys/1/days/1/images/",
+        "@error": {
+            "@message": "Invalid JSON document",
+            "@messages": [
+                "'description' is a required property\n\nFailed validating 'required' in schema:\n    {'properties': {'date': {'description': 'Date of the day',\n                             'type': 'string'},\n                    'description': {'description': 'Description of the day',\n                                    'type': 'string'}},\n     'required': ['date', 'description'],\n     'type': 'object'}\n\nOn instance:\n    {'date': '2020-03-15 18:30:00', 'descripstion': 'test description'}"
+            ]
+        }
+    }
 
++ Response 415 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/2/journeys/1/days/1/images/",
+        "@error": {
+            "@message": "Unsupported media type",
+            "@messages": [
+                "Requests must be JSON"
+            ]
+        }
+    }
+    
 
 ## Image Item [/api/users/{user}/journeys/{journey}/days/{day}/images/{image}.{extension}]
 + Parameters
@@ -1000,44 +1292,52 @@ object containing the extension of the image.
 You can get the Image in the API.
 
 + Response 200 (application/vnd.mason+json)
-            {
-                "@controls": {
-                    "self": {
-                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg"
-                    },
-                    "edit": {
-                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
-                        "method": "PUT",
-                        "encoding": "json",
-                        "title": "Modify one image to the Journey Diary API",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "extension"
-                            ],
-                            "properties": {
-                                "extension": {
-                                    "description": "Extension of the image",
-                                    "type": "string"
-                                }
+        {
+            "image": "1.png",
+            "@controls": {
+                "self": {
+                    "href": "/api/users/1/journeys/1/days/1/images/1/"
+                },
+                "edit": {
+                    "method": "PUT",
+                    "encoding": "json",
+                    "title": "Modify one image to the Journey Diary API",
+                    "schema": {
+                        "type": "object",
+                        "required": [
+                            "extension"
+                        ],
+                        "properties": {
+                            "extension": {
+                                "description": "Extension of the image",
+                                "type": "string"
                             }
                         }
                     },
-                    "delete": {
-                        "href": "/api/users/10/journeys/20/days/30/images/40.jpg",
-                        "method": "DELETE",
-                        "title": "Delete one image of the Journey Diary API"
-                    },
-                    "up":{
-                        "href": "/api/users/10/journeys/20/days/30/images",
-                        "title":"Collection of images of this image"
-                    }
+                    "href": "/api/users/1/journeys/1/days/1/images/1/"
+                },
+                "delete": {
+                    "method": "DELETE",
+                    "title": "Delete one image of the Journey Diary API",
+                    "href": "/api/users/1/journeys/1/days/1/images/1/"
+                },
+                "up": {
+                    "title": "Collection of images of this image",
+                    "href": "/api/users/1/journeys/1/days/1/images/"
                 }
             }
+        }
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to access one User that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/1/journeys/1/days/2/images/1",
+        "@error": {
+            "@message": "Image not found",
+            "@messages": [
+                "Image doesn't exist"
+            ]
+        }
+    }
 
 ### Modify informations about one Image [PUT]
 You can modify the informations about one Image in the API. It takes a JSON
@@ -1088,8 +1388,37 @@ object containing the extension.
 
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to modify one User that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/1/journeys/1/days/2/images/1",
+        "@error": {
+            "@message": "Image not found",
+            "@messages": [
+                "Image doesn't exist"
+            ]
+        }
+    }
+
++ Response 400 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/1/journeys/1/days/1/images/1",
+        "@error": {
+            "@message": "Invalid JSON document",
+            "@messages": [
+                "'extension' is a required property\n\nFailed validating 'required' in schema:\n    {'properties': {'extension': {'description': 'Extension of the image',\n                                  'type': 'string'}},\n     'required': ['extension'],\n     'type': 'object'}\n\nOn instance:\n    {'extensinon': 'mod'}"
+            ]
+        }
+    }
+
++ Response 415 (application/vnd.mason+json)
+    {
+        "resource_url": "/api/users/2/journeys/1/days/1/images/1",
+        "@error": {
+            "@message": "Unsupported media type",
+            "@messages": [
+                "Requests must be JSON"
+            ]
+        }
+    }
 
 ### Delete one Image [DELETE]
 You can delete one Image in the API.
@@ -1135,5 +1464,12 @@ You can delete one Image in the API.
 
 
 + Response 404 (application/vnd.mason+json)
-    Returned if trying to delete one Day that does not exist.
-    + Body
+    {
+        "resource_url": "/api/users/1/journeys/1/days/2/images/1",
+        "@error": {
+            "@message": "Image not found",
+            "@messages": [
+                "Image doesn't exist"
+            ]
+        }
+    }
