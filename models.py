@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
+from config import USERNAME,PASSWORD,ADDRESS,DATABASE
 
 app = Flask("__database__")
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:Journey111@127.0.0.1/sys"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://"+USERNAME+":"+PASSWORD+"@"+ADDRESS+"/"+DATABASE
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 api = Api(app)

@@ -1,0 +1,4 @@
+USERNAME = "root"
+PASSWORD = "Journey111"
+ADDRESS = "127.0.0.1"
+DATABASE = "sys"
