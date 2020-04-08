@@ -38,14 +38,34 @@ def client():
     os.unlink(db_fname)
 
 def _populate_db():
-    for i in range(1, 4):
-        s = user(
+    us = user(
+            id=1,
+            username="testuser1",
+            password="testpassword", 
+            email="testemail1"
+        )
+      
+    for i in range(2, 4):
+        u = user(
             id=i,
             username="testuser"+str(i),
             password="testpassword", 
             email="testemail"+str(i)
         )
-        db.session.add(s)
+
+        db.session.add(us)
+        db.session.add(u)
+    db.session.commit()
+
+
+    for i in range(1, 4):
+        j = journey(
+            id=i,
+            title="testtitle"+str(i),
+            user = us
+        )
+        db.session.add(j)
+
     db.session.commit()
     
 def _get_user_json(number=1):
@@ -54,6 +74,14 @@ def _get_user_json(number=1):
     """
     
     return {"id": 1, "username": "extrauser", "password":"extrapassword", "email":"extraemail" }
+
+def _get_journey_json(number=1):
+    """
+    Creates a valid sensor JSON object to be used for PUT and POST tests.
+    """
+    
+    return {"id": 1, "title": "extratitle"}
+    
     
 def _check_namespace(client, response):
     """
@@ -111,7 +139,7 @@ def _check_control_put_method(ctrl, client, obj):
     resp = client.put(href, json=body)
     assert resp.status_code == 204
     
-def _check_control_post_method(ctrl, client, obj):
+def _check_control_post_method_user(ctrl, client, obj):
     """
     Checks a POST type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
@@ -129,6 +157,29 @@ def _check_control_post_method(ctrl, client, obj):
     assert method == "post"
     assert encoding == "json"
     body = _get_user_json()
+    validate(body, schema)
+    resp = client.post(href, json=body)
+    assert resp.status_code == 201
+
+
+def _check_control_post_method_journey(ctrl, client, obj):
+    """
+    Checks a POST type control from a JSON object be it root document or an item
+    in a collection. In addition to checking the "href" attribute, also checks
+    that method, encoding and schema can be found from the control. Also
+    validates a valid sensor against the schema of the control to ensure that
+    they match. Finally checks that using the control results in the correct
+    status code of 201.
+    """
+    
+    ctrl_obj = obj["@controls"][ctrl]
+    href = ctrl_obj["href"]
+    method = ctrl_obj["method"].lower()
+    encoding = ctrl_obj["encoding"].lower()
+    schema = ctrl_obj["schema"]
+    assert method == "post"
+    assert encoding == "json"
+    body = _get_journey_json()
     validate(body, schema)
     resp = client.post(href, json=body)
     assert resp.status_code == 201
@@ -152,7 +203,7 @@ class TestUserCollection(object):
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        _check_control_post_method("add", client, body)
+        _check_control_post_method_user("add", client, body)
         assert len(body["items"]) == 3
         for item in body["items"]:
             _check_control_get_method("self", client, item)
@@ -268,3 +319,138 @@ class TestUserItem(object):
         assert resp.status_code == 404
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
+
+
+  
+    
+
+
+class TestJourneybyUser(object):
+    """
+    This class implements tests for each HTTP method in user collection
+    resource. 
+    """
+    
+    RESOURCE_URL = "/api/users/2/journeys/"
+
+    def test_get(self, client):
+        """
+        Tests the GET method. Checks that the response status code is 200, and
+        then checks that all of the expected attributes and controls are
+        present, and the controls work. Also checks that all of the items from
+        the DB popluation are present, and their controls.
+        """
+        
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        _check_control_post_method_journey("add", client, body)
+        assert len(body["items"]) == 0
+        for item in body["items"]:
+            _check_control_get_method("self", client, item)
+            assert "title" in item
+
+
+    def test_post(self, client):
+        """
+        Tests the POST method. Checks all of the possible error codes, and 
+        also checks that a valid request receives a 201 response with a 
+        location header that leads into the newly created resource.
+        """
+        
+        valid = _get_journey_json()
+
+        # test with valid and see that it exists afterward
+        resp = client.post(self.RESOURCE_URL, json=valid)
+        body = json.loads(client.get(self.RESOURCE_URL).data)
+        assert resp.status_code == 201
+        resp = client.get(resp.headers["Location"])
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        assert body["title"] == "extratitle"
+
+        # test with wrong content type
+        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
+        assert resp.status_code == 415
+        
+        
+        
+        # remove username field for 400
+        valid.pop("title")
+        resp = client.post(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 400
+        
+        
+class TestJourneyItem(object):
+    
+    RESOURCE_URL = "/api/users/1/journeys/2/"
+    INVALID_URL = "/api/users/X/journeys/X/"
+    MODIFIED_URL = "/api/users/1/journeys/1/"
+    
+    def test_get(self, client):
+        """
+        Tests the GET method. Checks that the response status code is 200, and
+        then checks that all of the expected attributes and controls are
+        present, and the controls work. Also checks that all of the items from
+        the DB popluation are present, and their controls.
+        """
+
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        assert body["title"] == "testtitle2"
+        _check_control_delete_method("delete", client, body)
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
+
+    def test_put(self, client):
+        """
+        Tests the PUT method. Checks all of the possible errors codes, and also
+        checks that a valid request receives a 204 response. Also tests that
+        when name is changed, the user can be found from a its new URI. 
+        """
+        
+        valid = _get_journey_json()
+        
+        
+        # test with wrong content type
+        resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
+        assert resp.status_code == 415
+        
+        resp = client.put(self.INVALID_URL, json=valid)
+        assert resp.status_code == 404
+
+        # test with another id
+        valid["title"] = "extratitle"
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 201
+ 
+             
+      
+           
+        # remove field for 400
+        valid.pop("title")
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 400
+        
+        valid = _get_user_json()
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        resp = client.get(self.MODIFIED_URL)
+        assert resp.status_code == 200
+      
+        
+    def test_delete(self, client):
+        """
+        Tests the DELETE method. Checks that a valid request reveives 204
+        response and that trying to GET the sensor afterwards results in 404.
+        Also checks that trying to delete a sensor that doesn't exist results
+        in 404.
+        """
+        
+        resp = client.delete(self.RESOURCE_URL)
+        assert resp.status_code == 204
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 404
+        resp = client.delete(self.INVALID_URL)
+        assert resp.status_code == 404
+
