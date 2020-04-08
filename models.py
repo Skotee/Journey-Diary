@@ -23,7 +23,7 @@ class journey(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.id", ondelete="CASCADE"), nullable=True)
-    title = db.Column(db.String(50), nullable=False)
+    title = db.Column(db.String(50), nullable=False, unique = True)
     user = db.relationship("user", back_populates="journey")
     day = db.relationship("day", back_populates="journey",
                           cascade="all, delete-orphan")
