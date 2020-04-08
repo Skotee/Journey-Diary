@@ -114,17 +114,18 @@ class JourneysByUser(Resource):
             validate(request.json, utils.journey_schema())
         except ValidationError as e:
             return utils.create_error_response(400, "Invalid JSON document", str(e))
+        jo = journey(title=request.json["title"], user_id = userid)
+
         us = user.query.filter_by(id = jo.user_id).first()
         if us is None:
             return utils.create_error_response(404, "User not found", "User with the id "+ userid +" doesn't exist")
         try:
-            jo = journey(title=request.json["title"], user_id = userid)
             db.session.add(jo)
             db.session.commit()
         except KeyError:
             return utils.create_error_response(400, "Key Error", "Bad parameters")
         except exc.IntegrityError:
-            return utils.create_error_response(404, "Integrity Error", "User with id " + str(userid) + " doesn't exist.")
+            return utils.create_error_response(409, "Integrity Error", "User with id " + str(userid) + " doesn't exist.") 
         uri = api.url_for(JourneyItem, userid = userid, journeyid = jo.id)
         resp = Response(status=201, headers={"Location": uri})
         return resp
@@ -159,7 +160,7 @@ class JourneyItem(Resource):
         try:
             db.session.commit()
         except exc.IntegrityError:
-            return self.create_error_response(409, "Integrity Error", "Database problem.")
+            return utils.create_error_response(409, "Integrity Error", "Database problem.")
         uri = api.url_for(JourneyItem, userid = userid, journeyid = jo.id)
         resp = Response(status=201, headers={"Location": uri})
         return resp
