@@ -72,7 +72,7 @@ class UserItem(Resource):
         except exc.IntegrityError:
             return utils.create_error_response(409, "Already exists", "User with username " + str(request.json["username"]) + " already exists.")
         uri = api.url_for(UserItem, userid = us.id)
-        resp = Response(status=201, headers={"Location": uri})
+        resp = Response(status=204, headers={"Location": uri})
         return resp
 
     def delete(self, userid):
@@ -159,7 +159,7 @@ class JourneyItem(Resource):
         except exc.IntegrityError:
             return utils.create_error_response(409, "Integrity Error", "Database problem.")
         uri = api.url_for(JourneyItem, userid = userid, journeyid = jo.id)
-        resp = Response(status=201, headers={"Location": uri})
+        resp = Response(status=204, headers={"Location": uri})
         return resp
 
 
@@ -261,7 +261,7 @@ class DayItem(Resource):
         except exc.IntegrityError:
             return self.create_error_response(409, "Integrity Error", "Database problem.")
         uri = api.url_for(DayItem, userid = userid, journeyid = journeyid, dayid = da.id)
-        resp = Response(status=201, headers={"Location": uri})
+        resp = Response(status=204, headers={"Location": uri})
         return resp
 
     def delete(self, userid, journeyid, dayid):
@@ -367,7 +367,7 @@ class ImageItem(Resource):
         except exc.IntegrityError:
             return self.create_error_response(409, "Integrity Error", "Database problem.")
         uri = api.url_for(ImageItem, userid = userid, journeyid = journeyid, dayid = dayid, imageid = im.id)
-        resp = Response(status=201, headers={"Location": uri})
+        resp = Response(status=204, headers={"Location": uri})
         return resp
 
     def delete(self, userid, journeyid, dayid, imageid):
