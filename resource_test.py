@@ -21,6 +21,7 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
 
+# based on https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-spring-2020/testing-flask-applications-part-2/ 
 # based on http://flask.pocoo.org/docs/1.0/testing/
 # we don't need a client for database testing, just the db handle
 @pytest.fixture

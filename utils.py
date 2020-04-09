@@ -6,6 +6,8 @@ MASON = "application/vnd.mason+json"
 
 class MasonBuilder(dict):
     """
+    Borrowed class from https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-spring-2020/implementing-rest-apis-with-flask/
+
     A convenience class for managing dictionaries that represent Mason
     objects. It provides nice shorthands for inserting some of the more
     elements into the object but mostly is just a parent for the much more
