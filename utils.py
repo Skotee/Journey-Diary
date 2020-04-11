@@ -74,14 +74,11 @@ class MasonBuilder(dict):
 class ModelBuilder(MasonBuilder):
 
     def add_controls_users_coll(self):
-    	"""
+        """
         Adds the control properties for the users collection
         """
 
-        self.add_control(
-            ctrl_name="self",
-            href="/api/users/",
-        )
+        self.add_control(ctrl_name="self", href="/api/users/")
         self.add_control(
             ctrl_name="add",
             href="/api/users/",
@@ -92,7 +89,7 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_user_item(self, userid):
-    	"""
+        """
         Adds the control properties for a user item
 
         : param str userid: id of the user of the useritem
@@ -128,7 +125,7 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_journeys_coll(self, userid):
-    	"""
+        """
         Adds the control properties for a journeys collection
 
         : param str userid: id of the user that has the collection
@@ -153,7 +150,7 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_journey_item(self, userid, journeyid):
-    	"""
+        """
         Adds the control properties for a journey item
 
         : param str userid: id of the user that created this journey
@@ -194,7 +191,7 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_days_coll(self, userid, journeyid):
-    	"""
+        """
         Adds the control properties for a days collection
 
         : param str userid: id of the user that created the journey of the day
@@ -223,7 +220,7 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_day_item(self, userid, journeyid, dayid):
-    	"""
+        """
         Adds the control properties for a day item
 
         : param str userid: id of the user that created the journey of the day
@@ -266,7 +263,7 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_images_coll(self, userid, journeyid, dayid):
-    	"""
+        """
         Adds the control properties for a images collection
 
         : param str userid: id of the user that created the journey of the day related to the images
@@ -296,7 +293,7 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_image_item(self, userid, journeyid, dayid, imageid):
-    	"""
+        """
         Adds the control properties for a images item
 
         : param str userid: id of the user that created the journey of the day
