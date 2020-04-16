@@ -217,7 +217,7 @@ class DaysByJourney(Resource):
         if us is None or str(us.id) != userid: 
             return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
         try:
-            da = day(date=request.json["date"], description = request.json["description"], journey_id = journeyid)
+            da = day(date= dt.datetime.strptime(request.json["date"], "%Y-%m-%dT%H:%M:%S"), description = request.json["description"], journey_id = journeyid)
             db.session.add(da)
             db.session.commit()
         except KeyError:
@@ -262,7 +262,7 @@ class DayItem(Resource):
             validate(request.json, utils.day_schema())
         except ValidationError as e:
             return utils.create_error_response(400, "Invalid JSON document", str(e))
-        da.date = request.json["date"]
+        da.date = dt.datetime.strptime(request.json["date"], "%Y-%m-%dT%H:%M:%S")
         da.description = request.json["description"]
         try:
             db.session.commit()
