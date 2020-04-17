@@ -40,3 +40,9 @@ Use the command flask run in the terminal.
 <h2>The URL to access your API (usually nameofapplication/api/version/)</h2>
 
 http://127.0.0.1:5000/api/ (the entry point is http://127.0.0.1:5000/api/users/)
+
+<h2> Instruction on how to run the tests of the implementation </h2>
+
+Type in command line this command: pytest --cov-report term-missing --cov=resource
+ in the folder where db_resource.py is. Test will run immediately. The coverage is the coverage of resource.
+
