@@ -316,8 +316,7 @@ class TestUserCollection(object):
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 400
 
-  
-        
+              
         
 class TestUserItem(object):
     
@@ -362,7 +361,7 @@ class TestUserItem(object):
         # test with another id
         valid["username"] = "extrauser"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 201
+        assert resp.status_code == 204
  
              
         # test with valid (only change id)
@@ -396,13 +395,14 @@ class TestUserItem(object):
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
 
-class TestJourneybyUser(object):
+class TestJourneysbyUser(object):
     """
     This class implements tests for each HTTP method in user collection
     resource. 
     """
     
     RESOURCE_URL = "/api/users/5/journeys/"
+    INVALID_URL =  "/api/users/X/journeys/"
 
     def test_get(self, client):
         """
@@ -420,7 +420,8 @@ class TestJourneybyUser(object):
         for item in body["items"]:
             _check_control_get_method("self", client, item)
             assert "title" in item
-
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
 
     def test_post(self, client):
         """
@@ -447,6 +448,9 @@ class TestJourneybyUser(object):
         # remove username field for 400
         valid.pop("title")
         resp = client.post(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 400
+
+        resp = client.post(self.INVALID_URL, json=valid)
         assert resp.status_code == 400
 
        
@@ -494,7 +498,7 @@ class TestJourneyItem(object):
         # test with another id
         valid["title"] = "extratitle"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 201
+        assert resp.status_code == 204
  
            
         # remove field for 400
@@ -523,13 +527,15 @@ class TestJourneyItem(object):
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
 
-class TestDayByJourney(object):
+class TestDaysByJourney(object):
     """
     This class implements tests for each HTTP method in user collection
     resource. 
     """
     
     RESOURCE_URL = "/api/users/5/journeys/5/days/"
+    INVALID_URL = "/api/users/X/journeys/X/days/"
+    SEC_INVALID_URL = "/api/users/5/journeys/X/days/"
 
     def test_get(self, client):
         """
@@ -546,6 +552,10 @@ class TestDayByJourney(object):
         for item in body["items"]:
             _check_control_get_method("self", client, item)
             assert "date" in item
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
+        resp = client.get(self.SEC_INVALID_URL)
+        assert resp.status_code == 404
 
     def test_post(self, client):
         """
@@ -577,6 +587,12 @@ class TestDayByJourney(object):
         # remove username field for 400
         valid.pop("description")
         resp = client.post(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 400
+
+        resp = client.post(self.INVALID_URL, json=valid)
+        assert resp.status_code == 400
+
+        resp = client.post(self.SEC_INVALID_URL, json=valid)
         assert resp.status_code == 400
         
         
@@ -625,7 +641,7 @@ class TestDayItem(object):
         # test with another id
         valid["description"] = "extradescription"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 201
+        assert resp.status_code == 204
             
         # remove field for 400
         valid.pop("description")
@@ -663,6 +679,7 @@ class TestImagesByDay(object):
     """
     
     RESOURCE_URL = "/api/users/5/journeys/5/days/5/images/"
+    INVALID_URL = "/api/users/X/journeys/X/days/X/images/"
 
     def test_get(self, client):
         """
@@ -676,6 +693,8 @@ class TestImagesByDay(object):
         assert resp.status_code == 200
         body = json.loads(resp.data)
         assert len(body["items"]) == 4
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
 
     def test_post(self, client):
         """
@@ -705,14 +724,18 @@ class TestImagesByDay(object):
         valid.pop("extension")
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 400
+
+        resp = client.post(self.INVALID_URL, json=valid)
+        assert resp.status_code == 404
         
         
 class TestImageItem(object):
 
     
-    RESOURCE_URL = "/api/users/5/journeys/5/days/5/images/1"
+    RESOURCE_URL = "/api/users/5/journeys/5/days/5/images/5"
     INVALID_URL = "/api/users/X/journeys/X/days/X/images/X"
     MODIFIED_URL = "/api/users/5/journeys/5/days/5/images/2"
+    DELETE_USER_URL = "/api/users/10/journeys/5/days/5/images/5"
     
     def test_get(self, client):
         """
@@ -748,7 +771,7 @@ class TestImageItem(object):
         # test with another id
         valid["extension"] = "jpg"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 201
+        assert resp.status_code == 204
             
         # remove field for 400
         valid.pop("extension")
@@ -776,6 +799,7 @@ class TestImageItem(object):
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
         
+     
 
 
 
