@@ -22,6 +22,7 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 
 # based on http://flask.pocoo.org/docs/1.0/testing/
 # we don't need a client for database testing, just the db handle
+#This file was inspired of https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-spring-2020/testing-flask-applications-part-2/
 @pytest.fixture
 def client():
     db_fd, db_fname = tempfile.mkstemp()
@@ -122,35 +123,28 @@ def _populate_db():
     
 def _get_user_json(number=1):
     """
-    Creates a valid sensor JSON object to be used for PUT and POST tests.
+    Creates a valid user JSON object to be used for PUT and POST tests.
     """
     
     return {"id": 1, "username": "extrauser", "password":"extrapassword", "email":"extraemail" }
 
-def _get_unvalid_user_json(number=1):
-    """
-    Creates a valid sensor JSON object to be used for PUT and POST tests.
-    """
-    
-    return {"id": 10, "username": "extrauser", "password":"extrapassword", "email":"extraemail" }
-
 def _get_journey_json(number=1):
     """
-    Creates a valid sensor JSON object to be used for PUT and POST tests.
+    Creates a valid journey JSON object to be used for PUT and POST tests.
     """
     
     return {"id": 1, "title": "extratitle"}
 
 def _get_day_json(number=1):
     """
-    Creates a valid sensor JSON object to be used for PUT and POST tests.
+    Creates a valid day JSON object to be used for PUT and POST tests.
     """
     
     return {"id": 1, "description": "extradescription", "date":dt.datetime(2012, 3, 3, 10, 10, 10), "journey_id": 5}
 
 def _get_image_json(number=1):
     """
-    Creates a valid sensor JSON object to be used for PUT and POST tests.
+    Creates a valid image JSON object to be used for PUT and POST tests.
     """
     
     return {"id": 1, "extension": "jpg", "day_id": 5}   
@@ -195,7 +189,7 @@ def _check_control_put_method(ctrl, client, obj):
     Checks a PUT type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
     that method, encoding and schema can be found from the control. Also
-    validates a valid sensor against the schema of the control to ensure that
+    validates a valid user against the schema of the control to ensure that
     they match. Finally checks that using the control results in the correct
     status code of 204.
     """
@@ -218,7 +212,7 @@ def _check_control_post_method_user(ctrl, client, obj):
     Checks a POST type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
     that method, encoding and schema can be found from the control. Also
-    validates a valid sensor against the schema of the control to ensure that
+    validates a valid user against the schema of the control to ensure that
     they match. Finally checks that using the control results in the correct
     status code of 201.
     """
@@ -241,7 +235,7 @@ def _check_control_post_method_journey(ctrl, client, obj):
     Checks a POST type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
     that method, encoding and schema can be found from the control. Also
-    validates a valid sensor against the schema of the control to ensure that
+    validates a valid user against the schema of the control to ensure that
     they match. Finally checks that using the control results in the correct
     status code of 201.
     """
@@ -358,7 +352,7 @@ class TestUserItem(object):
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
 
-        # test with another id
+        # test with another username
         valid["username"] = "extrauser"
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 204
@@ -383,8 +377,8 @@ class TestUserItem(object):
     def test_delete(self, client):
         """
         Tests the DELETE method. Checks that a valid request reveives 204
-        response and that trying to GET the sensor afterwards results in 404.
-        Also checks that trying to delete a sensor that doesn't exist results
+        response and that trying to GET the user afterwards results in 404.
+        Also checks that trying to delete user that doesn't exist results
         in 404.
         """
         
@@ -495,7 +489,7 @@ class TestJourneyItem(object):
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
 
-        # test with another id
+        # test with another title
         valid["title"] = "extratitle"
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 204
@@ -515,8 +509,8 @@ class TestJourneyItem(object):
     def test_delete(self, client):
         """
         Tests the DELETE method. Checks that a valid request reveives 204
-        response and that trying to GET the sensor afterwards results in 404.
-        Also checks that trying to delete a sensor that doesn't exist results
+        response and that trying to GET the journey afterwards results in 404.
+        Also checks that trying to delete a journey that doesn't exist results
         in 404.
         """
         
@@ -638,7 +632,7 @@ class TestDayItem(object):
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
 
-        # test with another id
+        # test with another description
         valid["description"] = "extradescription"
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 204
@@ -660,8 +654,8 @@ class TestDayItem(object):
     def test_delete(self, client):
         """
         Tests the DELETE method. Checks that a valid request reveives 204
-        response and that trying to GET the sensor afterwards results in 404.
-        Also checks that trying to delete a sensor that doesn't exist results
+        response and that trying to GET the day afterwards results in 404.
+        Also checks that trying to delete a day that doesn't exist results
         in 404.
         """
         
@@ -768,7 +762,7 @@ class TestImageItem(object):
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
 
-        # test with another id
+        # test with another extension
         valid["extension"] = "jpg"
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 204
@@ -787,8 +781,8 @@ class TestImageItem(object):
     def test_delete(self, client):
         """
         Tests the DELETE method. Checks that a valid request reveives 204
-        response and that trying to GET the sensor afterwards results in 404.
-        Also checks that trying to delete a sensor that doesn't exist results
+        response and that trying to GET the image afterwards results in 404.
+        Also checks that trying to delete a image that doesn't exist results
         in 404.
         """
         
