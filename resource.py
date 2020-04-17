@@ -3,7 +3,7 @@ from flask_restful import Resource
 from models import user, journey, day, image, db, app, api
 from sqlalchemy import exc
 from utils import ModelBuilder
-from datetime import datetime
+import datetime as dt
 from jsonschema import validate, ValidationError
 import json
 import utils
@@ -362,5 +362,3 @@ class ImageItem(Resource):
         db.session.commit()
         body = ModelBuilder()
         return Response(json.dumps(body), 204, mimetype="application/vnd.mason+json")
-
-
