@@ -121,8 +121,6 @@ class JourneysByUser(Resource):
             db.session.commit()
         except KeyError:
             return utils.create_error_response(400, "Key Error", "Bad parameters")
-        except exc.IntegrityError:
-            return utils.create_error_response(409, "Integrity Error", "User with id " + str(userid) + " doesn't exist.") 
         uri = api.url_for(JourneyItem, userid = userid, journeyid = jo.id)
         resp = Response(status=201, headers={"Location": uri})
         return resp
@@ -154,10 +152,7 @@ class JourneyItem(Resource):
         except ValidationError as e:
             return utils.create_error_response(400, "Invalid JSON document", str(e))
         jo.title = request.json["title"]
-        try:
-            db.session.commit()
-        except exc.IntegrityError:
-            return utils.create_error_response(409, "Integrity Error", "Database problem.")
+        db.session.commit()
         uri = api.url_for(JourneyItem, userid = userid, journeyid = jo.id)
         resp = Response(status=204, headers={"Location": uri})
         return resp
@@ -171,10 +166,7 @@ class JourneyItem(Resource):
         if jo is None: 
             return utils.create_error_response(404, "Journey not found", "Journey doesn't exist")
         db.session.delete(jo)
-        try:
-            db.session.commit()
-        except exc.IntegrityError:
-            return utils.create_error_response(409, "IntegrityError", "IntegrityError")
+        db.session.commit()
         body = ModelBuilder()
         return Response(json.dumps(body), 204, mimetype="application/vnd.mason+json")
 
@@ -219,8 +211,6 @@ class DaysByJourney(Resource):
             db.session.commit()
         except KeyError:
             return utils.create_error_response(400, "Key Error", "Bad parameters")
-        except exc.IntegrityError:
-            return utils.create_error_response(409, "Integrity Error", "Journey with id " + str(journeyid) + " doesn't exist.")
         uri = api.url_for(DayItem, userid = userid, journeyid = journeyid, dayid = da.id)
         resp = Response(status=201, headers={"Location": uri})
         return resp
@@ -254,12 +244,9 @@ class DayItem(Resource):
             validate(request.json, utils.day_schema())
         except ValidationError as e:
             return utils.create_error_response(400, "Invalid JSON document", str(e))
-       da.date = dt.datetime.strptime(request.json["date"], "%Y-%m-%dT%H:%M:%S")
-       da.description = request.json["description"]
-        try:
-            db.session.commit()
-        except exc.IntegrityError:
-            return self.create_error_response(409, "Integrity Error", "Database problem.")
+        da.date = dt.datetime.strptime(request.json["date"], "%Y-%m-%dT%H:%M:%S")
+        da.description = request.json["description"]
+        db.session.commit()
         uri = api.url_for(DayItem, userid = userid, journeyid = journeyid, dayid = da.id)
         resp = Response(status=204, headers={"Location": uri})
         return resp
@@ -273,10 +260,7 @@ class DayItem(Resource):
         if da is None:
             return utils.create_error_response(404, "Day not found", "Day doesn't exist")
         db.session.delete(da)
-        try:
-            db.session.commit()
-        except exc.IntegrityError:
-            return utils.create_error_response(409, "IntegrityError", "IntegrityError")
+        db.session.commit()
         body = ModelBuilder()
         return Response(json.dumps(body), 204, mimetype="application/vnd.mason+json")
 
@@ -323,8 +307,6 @@ class ImagesByDay(Resource):
             db.session.commit()
         except KeyError:
             return utils.create_error_response(400, "Key Error", "Bad parameters")
-        except exc.IntegrityError:
-            return utils.create_error_response(409, "Integrity Error", "Day with id " + str(dayid) + " doesn't exist.")
         uri = api.url_for(ImageItem, userid = userid, journeyid = journeyid, dayid = dayid, imageid = im.id)
         resp = Response(status=201, headers={"Location": uri})
         return resp
@@ -362,10 +344,7 @@ class ImageItem(Resource):
         except ValidationError as e:
             return utils.create_error_response(400, "Invalid JSON document", str(e))
         im.extension = request.json["extension"]
-        try:
-            db.session.commit()
-        except exc.IntegrityError:
-            return self.create_error_response(409, "Integrity Error", "Database problem.")
+        db.session.commit()
         uri = api.url_for(ImageItem, userid = userid, journeyid = journeyid, dayid = dayid, imageid = im.id)
         resp = Response(status=204, headers={"Location": uri})
         return resp
@@ -380,10 +359,7 @@ class ImageItem(Resource):
         if im is None:
             return utils.create_error_response(404, "Image not found", "Image doesn't exist")
         db.session.delete(im)
-        try:
-            db.session.commit()
-        except exc.IntegrityError:
-            return utils.create_error_response(409, "IntegrityError", "IntegrityError")
+        db.session.commit()
         body = ModelBuilder()
         return Response(json.dumps(body), 204, mimetype="application/vnd.mason+json")
 
