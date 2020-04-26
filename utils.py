@@ -6,6 +6,8 @@ MASON = "application/vnd.mason+json"
 
 class MasonBuilder(dict):
     """
+    Borrowed class from https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-spring-2020/implementing-rest-apis-with-flask/
+
     A convenience class for managing dictionaries that represent Mason
     objects. It provides nice shorthands for inserting some of the more
     elements into the object but mostly is just a parent for the much more
@@ -72,10 +74,11 @@ class MasonBuilder(dict):
 class ModelBuilder(MasonBuilder):
 
     def add_controls_users_coll(self):
-        self.add_control(
-            ctrl_name="self",
-            href="/api/users/",
-        )
+        """
+        Adds the control properties for the users collection
+        """
+
+        self.add_control(ctrl_name="self", href="/api/users/")
         self.add_control(
             ctrl_name="add",
             href="/api/users/",
@@ -86,6 +89,12 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_user_item(self, userid):
+        """
+        Adds the control properties for a user item
+
+        : param str userid: id of the user of the useritem
+        """
+
         self.add_control(
             ctrl_name="self",
             href="/api/users/" + str(userid) + "/"
@@ -116,6 +125,12 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_journeys_coll(self, userid):
+        """
+        Adds the control properties for a journeys collection
+
+        : param str userid: id of the user that has the collection
+        """
+
         self.add_control(
             ctrl_name="self",
             href="/api/users/" + str(userid) + "/journeys/"
@@ -135,6 +150,13 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_journey_item(self, userid, journeyid):
+        """
+        Adds the control properties for a journey item
+
+        : param str userid: id of the user that created this journey
+        : param str journeyid: id of the journey of the item
+        """
+
         self.add_control(
             ctrl_name="self",
             href="/api/users/" + str(userid) +
@@ -169,6 +191,13 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_days_coll(self, userid, journeyid):
+        """
+        Adds the control properties for a days collection
+
+        : param str userid: id of the user that created the journey of the day
+        : param str journeyid: id of the journey of the collection of days
+        """
+
         self.add_control(
             ctrl_name="self",
             href="/api/users/" + str(userid) +
@@ -191,6 +220,14 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_day_item(self, userid, journeyid, dayid):
+        """
+        Adds the control properties for a day item
+
+        : param str userid: id of the user that created the journey of the day
+        : param str journeyid: id of the journey that created the day
+        : param str dayid: id of the day of the item
+        """
+
         self.add_control(
             ctrl_name="self",
             href="/api/users/" + str(userid) + "/journeys/" +
@@ -226,6 +263,14 @@ class ModelBuilder(MasonBuilder):
         )
 
     def add_controls_images_coll(self, userid, journeyid, dayid):
+        """
+        Adds the control properties for a images collection
+
+        : param str userid: id of the user that created the journey of the day related to the images
+        : param str journeyid: id of the journey of the day of the collection of images
+        : param str dayid: id of the day of the collection of images
+        """
+
         self.add_control(
             ctrl_name="self",
             href="/api/users/" + str(userid) + "/journeys/" +
@@ -244,10 +289,19 @@ class ModelBuilder(MasonBuilder):
             ctrl_name="day-of",
             href="/api/users/" + str(userid) + "/journeys/" +
             str(journeyid) + "/days/" + str(dayid) + "/",
-      		    title="Day related to this collection of Images"
+      		title="Day related to this collection of Images"
         )
 
     def add_controls_image_item(self, userid, journeyid, dayid, imageid):
+        """
+        Adds the control properties for a images item
+
+        : param str userid: id of the user that created the journey of the day
+        : param str journeyid: id of the journey that created the day
+        : param str dayid: id of the day related to the image
+        : param str imageid: id of the image of the item
+        """
+
         self.add_control(
             ctrl_name="self",
             href="/api/users/" + str(userid) + "/journeys/" + str(journeyid) +
