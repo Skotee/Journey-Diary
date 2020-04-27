@@ -6,6 +6,7 @@ import time
 from datetime import datetime
 from json import dumps
 from jsonschema import validate
+from dateutil import parser
 from sqlalchemy.engine import Engine
 from sqlalchemy import event
 from sqlalchemy.exc import IntegrityError, StatementError
@@ -13,17 +14,15 @@ from sqlalchemy.exc import IntegrityError, StatementError
 from app import app, db
 from models import user, journey, day, image
 
-
-
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor = dbapi_connection.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
 
-# based on https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-spring-2020/testing-flask-applications-part-2/ 
 # based on http://flask.pocoo.org/docs/1.0/testing/
 # we don't need a client for database testing, just the db handle
+#This file was inspired of https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-spring-2020/testing-flask-applications-part-2/
 @pytest.fixture
 def client():
     db_fd, db_fname = tempfile.mkstemp()
@@ -39,7 +38,6 @@ def client():
     os.close(db_fd)
     os.unlink(db_fname)
 
-dateva = datetime(2012, 3, 3, 10, 10, 10)
 
 
 def _populate_db():
@@ -60,18 +58,37 @@ def _populate_db():
         
     db.session.add(jo)
 
+
+
+    da = day(
+        id=5,
+        description = "description5",
+        date = dt.datetime(2012, 3, 3, 10, 10, 10),
+        journey_id = 5, 
+        journey = jo
+
+        )
+
+    im = image(
+        id = 5, 
+        extension = "jpg", 
+        day_id = 5, 
+        day = da
+        )
+
+
+
+    db.session.add(da)
+
     for i in range(1, 4):
         u = user(
             id=i,
-            username="testuser"+str(i),
+            username="testuser",
             password="testpassword", 
-            email="testemail"+str(i)
+            email="testemail"
         )
 
         db.session.add(u)
-
-
-
 
     for i in range(1, 4):
         j = journey(
@@ -87,33 +104,52 @@ def _populate_db():
             id=i,
             description = "description"+str(i),
             journey_id = 5, 
-            date = dateva
+            date = dt.datetime(2012, 3, 3, 10, 10, 10)
         )
         db.session.add(d)
+
+    for i in range(1, 4):
+        i = image(
+            id=i,
+            extension="jpg",
+            day_id = 5
+        )
+
+        db.session.add(i)
+
 
     db.session.commit()
 
     
 def _get_user_json(number=1):
     """
-    Creates a valid sensor JSON object to be used for PUT and POST tests.
+    Creates a valid user JSON object to be used for PUT and POST tests.
     """
     
     return {"id": 1, "username": "extrauser", "password":"extrapassword", "email":"extraemail" }
 
 def _get_journey_json(number=1):
     """
-    Creates a valid sensor JSON object to be used for PUT and POST tests.
+    Creates a valid journey JSON object to be used for PUT and POST tests.
     """
     
     return {"id": 1, "title": "extratitle"}
 
 def _get_day_json(number=1):
     """
-    Creates a valid sensor JSON object to be used for PUT and POST tests.
+    Creates a valid day JSON object to be used for PUT and POST tests.
     """
     
-    return {"id": 1, "description": "extradescription", "date":"2020-03-12", "journey_id": 5}
+    return {"id": 1, "description": "extradescription", "date":dt.datetime(2012, 3, 3, 10, 10, 10), "journey_id": 5}
+
+def _get_image_json(number=1):
+    """
+    Creates a valid image JSON object to be used for PUT and POST tests.
+    """
+    
+
+    return {"id": 1, "extension": "jpg", "day_id": 5}   
+    
     
     
 def _check_namespace(client, response):
@@ -154,7 +190,7 @@ def _check_control_put_method(ctrl, client, obj):
     Checks a PUT type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
     that method, encoding and schema can be found from the control. Also
-    validates a valid sensor against the schema of the control to ensure that
+    validates a valid user against the schema of the control to ensure that
     they match. Finally checks that using the control results in the correct
     status code of 204.
     """
@@ -177,7 +213,7 @@ def _check_control_post_method_user(ctrl, client, obj):
     Checks a POST type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
     that method, encoding and schema can be found from the control. Also
-    validates a valid sensor against the schema of the control to ensure that
+    validates a valid user against the schema of the control to ensure that
     they match. Finally checks that using the control results in the correct
     status code of 201.
     """
@@ -200,7 +236,7 @@ def _check_control_post_method_journey(ctrl, client, obj):
     Checks a POST type control from a JSON object be it root document or an item
     in a collection. In addition to checking the "href" attribute, also checks
     that method, encoding and schema can be found from the control. Also
-    validates a valid sensor against the schema of the control to ensure that
+    validates a valid user against the schema of the control to ensure that
     they match. Finally checks that using the control results in the correct
     status code of 201.
     """
@@ -219,7 +255,7 @@ def _check_control_post_method_journey(ctrl, client, obj):
 
 class TestUserCollection(object):
     """
-    This class implements tests for each HTTP method in user collection
+    This class implements tests for each HTTP method in sensor collection
     resource. 
     """
     
@@ -240,7 +276,11 @@ class TestUserCollection(object):
         assert len(body["items"]) == 4
         for item in body["items"]:
             _check_control_get_method("self", client, item)
+            _check_control_get_method("profile", client, item)
+            assert "id" in item
             assert "username" in item
+            assert "password" in item
+            assert "email" in item
 
 
     def test_post(self, client):
@@ -251,20 +291,23 @@ class TestUserCollection(object):
         """
         
         valid = _get_user_json()
-
-        # test with valid and see that it exists afterward
-        resp = client.post(self.RESOURCE_URL, json=valid)
-        body = json.loads(client.get(self.RESOURCE_URL).data)
-        assert resp.status_code == 201
-        resp = client.get(resp.headers["Location"])
-        assert resp.status_code == 200
-        body = json.loads(resp.data)
-        assert body["username"] == "extrauser"
-        assert body["email"] == "extraemail"
-
+        
         # test with wrong content type
         resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
         assert resp.status_code == 415
+        
+        # test with valid and see that it exists afterward
+        resp = client.post(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 201
+        assert resp.headers["Location"].endswith(self.RESOURCE_URL + str(id) + "/")
+        resp = client.get(resp.headers["Location"])
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        assert body["id"] == 1
+        assert body["username"] == "extrauser"
+        assert body["password"] == "extrapassword"
+        assert body["email"] == "extraemail"
+        
         
         # send same data again for 409
         resp = client.post(self.RESOURCE_URL, json=valid)
@@ -274,7 +317,8 @@ class TestUserCollection(object):
         valid.pop("username")
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 400
-        
+
+              
         
 class TestUserItem(object):
     
@@ -293,21 +337,26 @@ class TestUserItem(object):
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        assert body["username"] == "testuser1"
-        assert body["email"] == "testemail1"
-        _check_control_delete_method("delete", client, body)
+        assert body["id"] == 1
+        assert body["username"] == "testuser"
+        assert body["password"] == "testpassword"
+        assert body["email"] == "testemail"
+        _check_namespace(client, body)
+        _check_control_get_method("profile", client, body)
+        _check_control_get_method("collection", client, body)
+        _check_control_put_method("edit", client, body)
+        _check_control_delete_method("journeydiary:delete", client, body)
         resp = client.get(self.INVALID_URL)
         assert resp.status_code == 404
 
     def test_put(self, client):
         """
-        Tests the PUT method. Checks all of the possible errors codes, and also
+        Tests the PUT method. Checks all of the possible erroe codes, and also
         checks that a valid request receives a 204 response. Also tests that
-        when name is changed, the user can be found from a its new URI. 
+        when name is changed, the sensor can be found from a its new URI. 
         """
         
         valid = _get_user_json()
-        
         
         # test with wrong content type
         resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
@@ -316,17 +365,17 @@ class TestUserItem(object):
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
 
-        # test with another id
+        # test with another username
         valid["username"] = "extrauser"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 201
+        assert resp.status_code == 204
  
              
         # test with valid (only change id)
-        valid["username"] = "testuser2"
+        valid["id"] = 1
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 409
-           
+        assert resp.status_code == 201
+        
         # remove field for 400
         valid.pop("username")
         resp = client.put(self.RESOURCE_URL, json=valid)
@@ -341,30 +390,29 @@ class TestUserItem(object):
     def test_delete(self, client):
         """
         Tests the DELETE method. Checks that a valid request reveives 204
-        response and that trying to GET the sensor afterwards results in 404.
-        Also checks that trying to delete a sensor that doesn't exist results
+        response and that trying to GET the user afterwards results in 404.
+        Also checks that trying to delete user that doesn't exist results
         in 404.
         """
         
         resp = client.delete(self.RESOURCE_URL)
-        assert resp.status_code == 204
+        assert resp.status_code == 200
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 404
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
+        
+        
+        
 
-
-  
-    
-
-
-class TestJourneybyUser(object):
+class TestJourneysbyUser(object):
     """
     This class implements tests for each HTTP method in user collection
     resource. 
     """
     
     RESOURCE_URL = "/api/users/5/journeys/"
+    INVALID_URL =  "/api/users/X/journeys/"
 
     def test_get(self, client):
         """
@@ -382,7 +430,8 @@ class TestJourneybyUser(object):
         for item in body["items"]:
             _check_control_get_method("self", client, item)
             assert "title" in item
-
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
 
     def test_post(self, client):
         """
@@ -412,9 +461,12 @@ class TestJourneybyUser(object):
         assert resp.status_code == 400
 
 
+        resp = client.post(self.INVALID_URL, json=valid)
+        assert resp.status_code == 400
+
+       
         
-
-
+        
 class TestJourneyItem(object):
     
     RESOURCE_URL = "/api/users/5/journeys/2/"
@@ -454,10 +506,10 @@ class TestJourneyItem(object):
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
 
-        # test with another id
+        # test with another title
         valid["title"] = "extratitle"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 201
+        assert resp.status_code == 204
  
            
         # remove field for 400
@@ -465,7 +517,7 @@ class TestJourneyItem(object):
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 400
         
-        valid = _get_user_json()
+        valid = _get_journey_json()
         resp = client.put(self.RESOURCE_URL, json=valid)
         resp = client.get(self.MODIFIED_URL)
         assert resp.status_code == 200
@@ -474,8 +526,8 @@ class TestJourneyItem(object):
     def test_delete(self, client):
         """
         Tests the DELETE method. Checks that a valid request reveives 204
-        response and that trying to GET the sensor afterwards results in 404.
-        Also checks that trying to delete a sensor that doesn't exist results
+        response and that trying to GET the journey afterwards results in 404.
+        Also checks that trying to delete a journey that doesn't exist results
         in 404.
         """
         
@@ -486,13 +538,15 @@ class TestJourneyItem(object):
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
 
-class TestDayByJourney(object):
+class TestDaysByJourney(object):
     """
     This class implements tests for each HTTP method in user collection
     resource. 
     """
     
     RESOURCE_URL = "/api/users/5/journeys/5/days/"
+    INVALID_URL = "/api/users/X/journeys/X/days/"
+    SEC_INVALID_URL = "/api/users/5/journeys/X/days/"
 
     def test_get(self, client):
         """
@@ -505,16 +559,14 @@ class TestDayByJourney(object):
         resp = client.get(self.RESOURCE_URL)
         assert resp.status_code == 200
         body = json.loads(resp.data)
-        _check_control_post_method_journey("add", client, body)
         assert len(body["items"]) == 4
         for item in body["items"]:
             _check_control_get_method("self", client, item)
-            assert "description" in item
             assert "date" in item
-            assert "journey_id" in item
-
-
-
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
+        resp = client.get(self.SEC_INVALID_URL)
+        assert resp.status_code == 404
 
     def test_post(self, client):
         """
@@ -524,6 +576,10 @@ class TestDayByJourney(object):
         """
         
         valid = _get_day_json()
+        day = valid["date"]
+        d = day.isoformat()
+        valid["date"] = d
+        
 
         # test with valid and see that it exists afterward
         resp = client.post(self.RESOURCE_URL, json=valid)
@@ -535,6 +591,7 @@ class TestDayByJourney(object):
         assert body["description"] == "extradescription"
 
         # test with wrong content type
+
         resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
         assert resp.status_code == 415
 
@@ -542,6 +599,14 @@ class TestDayByJourney(object):
         valid.pop("description")
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 400
+
+        resp = client.post(self.INVALID_URL, json=valid)
+        assert resp.status_code == 400
+
+        resp = client.post(self.SEC_INVALID_URL, json=valid)
+        assert resp.status_code == 400
+        
+        
 
 class TestDayItem(object):
     
@@ -573,7 +638,10 @@ class TestDayItem(object):
         """
         
         valid = _get_day_json()
-        
+        day = valid["date"]
+        d = day.isoformat()
+        valid["date"] = d
+
         
         # test with wrong content type
         #resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
@@ -582,18 +650,20 @@ class TestDayItem(object):
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
 
-        # test with another id
+        # test with another description
         valid["description"] = "extradescription"
         resp = client.put(self.RESOURCE_URL, json=valid)
-        assert resp.status_code == 201
- 
-           
+        assert resp.status_code == 204
+            
         # remove field for 400
         valid.pop("description")
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 400
         
-        valid = _get_user_json()
+        valid = _get_day_json()
+        day = valid["date"]
+        d = day.isoformat()
+        valid["date"] = d
         resp = client.put(self.RESOURCE_URL, json=valid)
         resp = client.get(self.MODIFIED_URL)
         assert resp.status_code == 200
@@ -602,8 +672,135 @@ class TestDayItem(object):
     def test_delete(self, client):
         """
         Tests the DELETE method. Checks that a valid request reveives 204
-        response and that trying to GET the sensor afterwards results in 404.
-        Also checks that trying to delete a sensor that doesn't exist results
+        response and that trying to GET the day afterwards results in 404.
+        Also checks that trying to delete a day that doesn't exist results
+        in 404.
+        """
+        
+        resp = client.delete(self.RESOURCE_URL)
+        assert resp.status_code == 204
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 404
+        resp = client.delete(self.INVALID_URL)
+        assert resp.status_code == 404
+
+class TestImagesByDay(object):
+    """
+    This class implements tests for each HTTP method in user collection
+    resource. 
+    """
+    
+    RESOURCE_URL = "/api/users/5/journeys/5/days/5/images/"
+    INVALID_URL = "/api/users/X/journeys/X/days/X/images/"
+
+    def test_get(self, client):
+        """
+        Tests the GET method. Checks that the response status code is 200, and
+        then checks that all of the expected attributes and controls are
+        present, and the controls work. Also checks that all of the items from
+        the DB popluation are present, and their controls.
+        """
+        
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        assert len(body["items"]) == 4
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
+
+    def test_post(self, client):
+        """
+        Tests the POST method. Checks all of the possible error codes, and 
+        also checks that a valid request receives a 201 response with a 
+        location header that leads into the newly created resource.
+        """
+        
+        valid = _get_image_json()
+       
+        
+
+        # test with valid and see that it exists afterward
+        resp = client.post(self.RESOURCE_URL, json=valid)
+        body = json.loads(client.get(self.RESOURCE_URL).data)
+        assert resp.status_code == 201
+        resp = client.get(resp.headers["Location"])
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+
+        # test with wrong content type
+
+        resp = client.post(self.RESOURCE_URL, data=json.dumps(valid))
+        assert resp.status_code == 415
+
+        # remove username field for 400
+        valid.pop("extension")
+        resp = client.post(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 400
+
+        resp = client.post(self.INVALID_URL, json=valid)
+        assert resp.status_code == 404
+        
+        
+class TestImageItem(object):
+
+    
+    RESOURCE_URL = "/api/users/5/journeys/5/days/5/images/5"
+    INVALID_URL = "/api/users/X/journeys/X/days/X/images/X"
+    MODIFIED_URL = "/api/users/5/journeys/5/days/5/images/2"
+    DELETE_USER_URL = "/api/users/10/journeys/5/days/5/images/5"
+    
+    def test_get(self, client):
+        """
+        Tests the GET method. Checks that the response status code is 200, and
+        then checks that all of the expected attributes and controls are
+        present, and the controls work. Also checks that all of the items from
+        the DB popluation are present, and their controls.
+        """
+
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
+
+    def test_put(self, client):
+        """
+        Tests the PUT method. Checks all of the possible errors codes, and also
+        checks that a valid request receives a 204 response. Also tests that
+        when name is changed, the user can be found from a its new URI. 
+        """
+        
+        valid = _get_image_json()
+      
+        
+        # test with wrong content type
+        resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
+        assert resp.status_code == 415
+        
+        resp = client.put(self.INVALID_URL, json=valid)
+        assert resp.status_code == 404
+
+        # test with another extension
+        valid["extension"] = "jpg"
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 204
+            
+        # remove field for 400
+        valid.pop("extension")
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 400
+        
+        valid = _get_image_json()
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        resp = client.get(self.MODIFIED_URL)
+        assert resp.status_code == 200
+      
+        
+    def test_delete(self, client):
+        """
+        Tests the DELETE method. Checks that a valid request reveives 204
+        response and that trying to GET the image afterwards results in 404.
+        Also checks that trying to delete a image that doesn't exist results
         in 404.
         """
         
@@ -614,5 +811,6 @@ class TestDayItem(object):
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
         
+
 
 

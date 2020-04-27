@@ -51,14 +51,14 @@
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
 ## Meeting 4.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 1st April **
+* **ASSISTANTS: Mika Oja**
 
 ### Minutes
-*Summary of what was discussed during the meeting*
+*Implementation and testing*
 
 ### Action points
-*List here the actions points discussed with assistants*
+*Improve the coverage of resource_test. Improve the documentation of the implementation.*
 
 
 ### Comments from staff
