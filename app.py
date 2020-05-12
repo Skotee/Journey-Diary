@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from models import user, journey, day, image, db, app, api
 from resource import UserCollection, UserItem, JourneysByUser, JourneyItem, DaysByJourney, DayItem, ImagesByDay, ImageItem
 

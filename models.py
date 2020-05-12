@@ -1,12 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
+from flask_cors import CORS
 from config import USERNAME,PASSWORD,ADDRESS,DATABASE
 
 app = Flask("__database__")
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://"+USERNAME+":"+PASSWORD+"@"+ADDRESS+"/"+DATABASE
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
+CORS(app)
 api = Api(app)
 
 
