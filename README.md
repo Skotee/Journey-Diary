@@ -46,3 +46,10 @@ http://127.0.0.1:5000/api/ (the entry point is http://127.0.0.1:5000/api/users/)
 Type in command line this command: pytest --cov-report term-missing --cov=resource
  in the folder where db_resource.py is. Test will run immediately. The coverage is the coverage of resource.
 
+<h2> Instruction on how to setup and run the client </h2>
+
+Type in command line this command (in project's folder directory): flask run. With this command server side will run, which is needed for proper working of client side.
+Then, in the same folder, to setup client type in command line: "npm install", to install all of dependendies.
+After installing, type in command line "npm start" to start all the scripts responsible for h
+ in the folder where db_resource.py is. Test will run immediately. The coverage is the coverage of resource.
+
